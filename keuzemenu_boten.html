@@ -117,7 +117,7 @@
             {
               optionInfo: {
                 title:
-                  "karperboot",
+                  "Karperboot",
                 nextQuestionId: 1,
                 value: 3,
                 img: "{{media url=&quot;wysiwyg/truckk.jpg&quot;}}"
@@ -129,7 +129,7 @@
                   "geen idee",
                 nextQuestionId: 2,
                 value: 4,
-                img: "{{media url=&quot;wysiwyg/truckk.jpg&quot;}}"
+                img: ""
               },
             },
           ],
@@ -283,13 +283,12 @@
         currentQuestionIndex = answerOption[i]["optionInfo"]["nextQuestionId"];
       }
     }
-    console.log("current question index is " + currentQuestionIndex)
     manipulateAnswer(previousQuestion);
     moveProgressBar();
-
     if (questions[previousQuestion][0]["question"]["answers"][0]["optionInfo"]["nextQuestionId"] != null) {
       createButton();
     } else {
+
       openURL();
       
     }
@@ -299,15 +298,15 @@
     if(number == 2){
       if(givenAnswers[-1] == "Vissen"){
         givenAnswers.pop()
-        givenAnswers.push("karperboot")
+        givenAnswers.push("Karperboot")
       }
       else if(givenAnswers[-1] == "Ontspanning"){
         givenAnswers.pop()
-        givenAnswers.push("Rubberboten")
+        givenAnswers.push("Rubberboot")
       }
       else{
         givenAnswers.pop()
-        givenAnswers.push("Opblaasboten")
+        givenAnswers.push("Opblaasboot")
       }
     }
   }
@@ -325,11 +324,11 @@
       var selectedProductsUrl ="https://bootman.nl/boten-motoren/boten/rubberboten?price=0-" + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
       window.open(selectedProductsUrl, "_self");
     } 
-    else if (givenAnswers[0] == "Opblaasboten"){
+    else if (givenAnswers[0] == "Opblaasboot"){
       questionTextHeader.innerText = "Deze opblaasboten passen het best bij jouw!";
       var selectedProductsUrl ="https://bootman.nl/boten-motoren/boten/Opblaasboten?price=0-" + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
       window.open(selectedProductsUrl, "_self");
-    } else if (givenAnswers[0] == "karperboten"){
+    } else if (givenAnswers[0] == "Karperboot"){
       questionTextHeader.innerText = "Deze karperboten passen het best bij jouw!";
       var selectedProductsUrl ="https://bootman.nl/boten-motoren/boten/karperboten?price=0-" + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
       window.open(selectedProductsUrl, "_self");
