@@ -1,0 +1,448 @@
+<style>
+    #myProgress {
+      width: 100%;
+      background-color: #ddd;
+    }
+    #myBar {
+      width: 1%;
+      height: 20px;
+      background-color: #04aa6d;
+    }
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+      width: 40%;
+      margin: 5px;
+    }
+  
+    .card:hover {
+      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    }
+  
+    .card-container {
+      padding: 2px 16px;
+      flex-shrink: 3;
+      margin: 5px;
+    }
+    .generatedBtns{
+      width:50%;
+    }
+    #more{
+      display: flex;
+    }
+    img {
+      width: 100%;
+      height: 60%;
+    }
+  </style>
+  <button id="modal-btn">keuzehulp</button>
+  <div id="modal-content">
+    <div class="modal-inner-content">
+      <h1 id="questionTextHeader">test vraag 1</h1>
+    </div>
+    <div id="questionAnswerDiv">
+      <div id="more"></div>
+    </div>
+    <div id="explanationDiv"></div>
+  
+    <br />
+    <div id="myProgress">
+      <div id="myBar"></div>
+    </div>
+  </div>
+  <script>
+    require(["jquery", "Magento_Ui/js/modal/modal"], function ($, modal) {
+      var options = {
+        type: "popup",
+        responsive: true,
+        innerScroll: true,
+        title: "bootman keuzehulp",
+        buttons: [
+          {
+            text: $.mage.__("back"),
+            class: "modal-close",
+            click: function () {
+              previousQuestion();
+            },
+          },
+          {
+            text: $.mage.__("herstart keuzehulp"),
+            class: "modal-close",
+            click: function () {
+              restartForm();
+            },
+          },
+          {
+            text: $.mage.__("close"),
+            class: "modal-close",
+            click: function () {
+              this.closeModal();
+            },
+          },
+        ],
+      };
+      modal(options, $("#modal-content"));
+      $("#modal-btn").on("click", function () {
+        $("#modal-content").modal("openModal");
+      });
+    });
+    var modal = document.getElementById("modal-row");
+    var btn = document.getElementById("model-btn");
+    var close = document.getElementById("close");
+    var questionTextHeader = document.getElementById("questionTextHeader");
+    var questions = [
+        [
+        {
+          question: {
+            id: 0,
+            title: "Zoekt u naar benzine of elektrische motoren?",
+            questionType: "standard",
+            answers: [
+              {
+                optionInfo: {
+                  title: "Benzine motoren",
+                  nextQuestionId: 1,
+                },
+              },
+              {
+                optionInfo: {
+                  title: "elektrische motoren",
+                  nextQuestionId: 2,
+                },
+              },
+            ],
+            explanation:"<p>bpppp</P>"          
+            },
+        },
+      ],
+      [
+        {
+          question: {
+            id: 1,
+            title: "Wat is je budget (minimaal 805 euro)?",
+            questionType: "inputField",
+            answers: [
+              {
+                optionInfo: {
+                  title: "[inputField]]",
+                  nextQuestionId: null,
+                },
+              },
+            ],
+            explanation:
+            // uitleg tabel meer pk en prijsklasse ongeveer prijs indicatie
+            ""
+          },
+        },
+      ],
+      [
+        {
+          question: {
+            id: 2,
+            title: "Wat voor elektrische motor zoek je??",
+            questionType: "standard",
+            answers: [
+              {
+                optionInfo: {
+                  title: "Fluistermotor",
+                  nextQuestionId: 3,
+                },
+              },
+              {
+                optionInfo: {
+                  title: "Elektrische motor",
+                  nextQuestionId: 3,
+                },
+              },
+              {
+                optionInfo: {
+                  title: "Boegmotor",
+                  nextQuestionId: 3,
+                },
+              },
+            ],
+            explanation:
+            "<table><tr><th>Onderwerp</th><th>Voordelen</th><th>Nadelen</th></tr><tr><td>Fluistermotoren</td><td>Weinig geluid, geschikt voor 2-4 personen, rustig varen</td><td>Maximaal 80LBS stuwkracht, meer geschikt voor kleine boten</td></tr><tr><td>Buitenboordmotoren</td><td>Meer kracht, geschikt voor vissen, voor middelgrote en grote boten</td><td>Iets geavanceerder</td></tr><tr><td>Boegmotoren</td><td>Speciaal voor vissen</td><td>Motor wordt aan de voorkant gemonteerd, alleen geschikt voor boten die daarvoor gemaakt zijn</td></tr></table> "
+          },
+        },
+      ],
+      [
+        {
+          question: {
+            id: 3,
+            title: "Wat is je budget (minimaal 805 euro)?",
+            questionType: "inputField",
+            answers: [
+              {
+                optionInfo: {
+                  title: "[inputField]]",
+                  nextQuestionId: null,
+                },
+              },
+            ],
+            explanation:
+            // uitleg tabel meer pk en prijsklasse ongeveer prijs indicatie
+            ""
+          },
+        },
+      ],
+    ];
+  
+    var givenAnswers = [];
+    var counter = 0;
+    var barProgression = 0;
+    var explanationState = false;
+    var currentQuestionIndex = 0;
+    var questionPath = [];
+    var totalWeight = 0;
+  
+    function example() {
+      el = document.getElementById("example");
+      el.style.visibility =
+        el.style.visibility == "visible" ? "hidden" : "visible";
+    }
+    function moveProgressBar() {
+      var questionsLen = questions.length;
+      var total_bar = 100 / questionsLen;
+      var elem = document.getElementById("myBar");
+      barProgression = barProgression + total_bar;
+      elem.style.width = barProgression + "%";
+    }
+    function restartProgressBar() {
+      var elem = document.getElementById("myBar");
+      elem.style.width = 1 + "%";
+      barProgression = 0;
+    }
+    function reduceProgressBar() {
+      var questionsLen = questions.length;
+      var elem = document.getElementById("myBar");
+      var total_bar = 100 / questionsLen;
+      barProgression = barProgression - total_bar;
+      elem.style.width = barProgression + "%";
+    }
+  
+    function calculate(){
+      var getal1 = parseFloat(document.getElementById('getal1').value);
+          var getal2 = parseFloat(document.getElementById('getal2').value);
+  
+              // Bereken de som van de twee getallen
+              var som = (getal1 * 75) + (getal2 * 45);
+  
+              // Zet het resultaat in het resultaatveld
+              document.getElementById('resultaat').value = som;
+    }
+  
+    function nextQuestion(id) {
+      explanationState = false;
+      document.getElementById("explanationDiv").innerHTML = "";
+      var totalAnswer =
+      questions[currentQuestionIndex][0]["question"]["answers"].length;
+      var answerOption =
+      questions[currentQuestionIndex][0]["question"]["answers"];
+  
+      var ids = [];
+      var givenAnswer = id;
+      var previousQuestion = currentQuestionIndex;
+      questionPath.push(currentQuestionIndex);
+      if(givenAnswer == "inputField"){
+        givenAnswer = document.getElementById(givenAnswer).value;
+        currentQuestionIndex = answerOption[0]["optionInfo"]["nextQuestionId"];
+      }
+      givenAnswers.push(givenAnswer);
+      
+      console.log(givenAnswers);
+  
+      for (var i = 0; i < totalAnswer; i++) {
+        if (answerOption[i]["optionInfo"]["title"] == givenAnswer) {
+          console.log(answerOption[i]["optionInfo"]["nextQuestionId"]);
+          currentQuestionIndex = answerOption[i]["optionInfo"]["nextQuestionId"];
+        }
+      }
+      console.log("current question index is " + currentQuestionIndex)
+      manipulateAnswer(currentQuestionIndex);
+      moveProgressBar();
+  
+      if (questions[previousQuestion][0]["question"]["answers"][0]["optionInfo"]["nextQuestionId"] != null) {
+        createButton();
+      } else {
+        openURL();
+        
+      }
+    }
+    
+    function manipulateAnswer(number){
+        number = number -1;
+      if (number == 0){
+        if(givenAnswers[0] == "gevorderd"){
+            givenAnswers.pop();
+            givenAnswers.push("79698")
+        }
+        else{
+            givenAnswers.pop();
+            givenAnswers.push("79702")
+        }
+      }
+      else  if(number == 1){
+        totalWeight = (givenAnswers.pop()) * 70;
+        givenAnswers.push(totalWeight.toString())
+      }
+    }
+  
+    function openURL(){
+      deleteButtons();
+      questionTextHeader.innerText = "Deze sups passen het best bij jouw!";
+      var selectedProductsUrl ="https://bootman.nl/sup-fun/sup-boards-opblaasbaar?price=0-" + givenAnswers[2] + "&prod_level="+ givenAnswers[0] +"&prod_loadcap_front=" + givenAnswers[1] + "-269";
+      window.open(selectedProductsUrl, "_self");
+      
+    }
+  
+    function restartForm() {
+      currentQuestionIndex = 0;
+      givenAnswers = [];
+      questionPath = [];
+      restartProgressBar();
+      document.getElementById("explanationDiv").innerHTML = "";
+      document.getElementById("more").innerHTML = "";
+      createStartButton();
+    }
+  
+    function previousQuestion() {
+      console.log(counter);
+      if (currentQuestionIndex == 0) {
+        alert("je bent bij de eerste vraag!");
+      } else {
+        explanationState = false;
+        document.getElementById("explanationDiv").innerHTML = "";
+        givenAnswers.pop();
+        currentQuestionIndex = questionPath.slice(-1);
+        questionPath.pop();
+        reduceProgressBar();
+        deleteButtons();
+        createButton();
+      }
+    }
+  
+    function moreInfo(id) {
+      console.log(explanationState);
+      if (explanationState == false) {
+        document.getElementById("explanationDiv").innerHTML +=
+        questions[currentQuestionIndex][0]["question"]["explanation"]
+        explanationState = true;
+        var id = document.getElementById("MoreInfoBtn");
+        id.parentNode.removeChild(id);
+      } else {
+        nextQuestion(id);
+      }
+    }
+  
+    function deleteButtons() {
+      var ids = [];
+      var elems = document.getElementsByClassName("generatedBtns");
+      for (var i = 0, len = elems.length; i < len; i++) {
+        ids.push(elems[i].id);
+      }
+  
+      if (ids[0] == "selectOptions") {
+        var id = document.getElementById(ids[0]);
+        id.parentNode.removeChild(id);
+      } else {
+        for (var p = 0; p < ids.length; p++) {
+          var id = document.getElementById(ids[p]);
+          id.parentNode.removeChild(id);
+        }
+      }
+    }
+  
+    function createButton() {
+      deleteButtons();
+      
+      questionTextHeader.innerText =
+        questions[currentQuestionIndex][0]["question"]["title"];
+      var totalAnswer =
+        questions[currentQuestionIndex][0]["question"]["answers"].length;
+      for (var i = 0; i < totalAnswer; i++) {
+        if (
+          questions[currentQuestionIndex][0]["question"]["questionType"] ==
+          "standard"
+        ) {
+          document.getElementById("more").innerHTML +=
+            "<button class='generatedBtns' id='" +
+            questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"][
+              "title"
+            ] +
+            "' value='" +
+            questions[currentQuestionIndex][0]["question"]["answers"][i][
+              "optionInfo"
+            ]["value"] +
+            "' onclick='nextQuestion(this.id)'>" +
+            questions[currentQuestionIndex][0]["question"]["answers"][i][
+              "optionInfo"
+            ]["title"] +
+            "</button>";
+        } else if (
+          questions[currentQuestionIndex][0]["question"]["questionType"] ==
+          "inputField"
+        ) {
+          document.getElementById("more").innerHTML +=
+            "<input class='generatedBtns' id='inputField'></input><input class='generatedBtns' type='submit' value='submit' id='budgetSubmitBtn' onclick='nextQuestion(\"inputField\")'></input>";
+        }
+        else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
+          "card"){
+          for(var i = 0; i < totalAnswer; i++){
+            document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+          }
+        }
+      }
+      if(questions[currentQuestionIndex][0]["question"]["explanation"] !=
+          ""){
+          document.getElementById("more").innerHTML += "<button class='generatedBtns card' id='MoreInfoBtn' onclick='moreInfo()'>meer info</button>";
+          
+        }
+    }
+  
+    function createStartButton() {
+      questionTextHeader.innerText = questions[currentQuestionIndex][0]["question"]["title"];
+      var totalAnswer = questions[currentQuestionIndex][0]["question"]["answers"].length;
+      console.log(totalAnswer)
+      for (var i = 0; i < totalAnswer; i++) {
+        if (
+            questions[currentQuestionIndex][0]["question"]["questionType"]  ==
+          "standard"
+        ) {
+          document.getElementById("more").innerHTML +=
+            "<button class='generatedBtns' id='" +
+            questions[counter][0]["question"]["answers"][i]["optionInfo"][
+              "title"
+            ] +
+            "' value='" +
+            questions[counter][0]["question"]["answers"][i]["optionInfo"][
+              "title"
+            ] +
+            "' onclick='nextQuestion(this.id)'>" +
+            questions[counter][0]["question"]["answers"][i]["optionInfo"][
+              "title"
+            ] +
+            "</button>";
+        }else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
+          "card"){
+          for(var i = 0; i < totalAnswer; i++){
+            document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+          }
+        } else {
+          document.getElementById("more").innerHTML +=
+            "<button class='generatedBtns' id='button_ " +
+            i +
+            "' value='" +
+            questions[counter][i] +
+            "' onclick='moreInfo(this.id)'>" +
+            questions[counter][i] +
+            "</button>";
+        }
+    }
+    if(questions[currentQuestionIndex][0]["question"]["explanation"] !=
+          ""){
+          document.getElementById("more").innerHTML += "<button class='generatedBtns card' id='MoreInfoBtn' onclick='moreInfo()'>meer info</button>";
+    }
+    }
+    createStartButton();
+  </script>
