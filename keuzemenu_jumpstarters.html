@@ -355,7 +355,7 @@
         }else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
           "card"){
           for(var i = 0; i < totalAnswer; i++){
-            document.getElementById("more").innerHTML += "<div class='generatedBtns card' id="+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"] +" onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+            document.getElementById("more").innerHTML += "<div class='generatedBtns' id="+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"] +" onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
           }
         } else {
           document.getElementById("more").innerHTML +=
