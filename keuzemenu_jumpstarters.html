@@ -214,6 +214,8 @@
       var givenAnswer = id;
       var previousQuestion = currentQuestionIndex;
       questionPath.push(currentQuestionIndex);
+      
+      moveProgressBar();
       if(givenAnswer == "inputField"){
         givenAnswer = document.getElementById(givenAnswer).value;
         currentQuestionIndex = answerOption[0]["optionInfo"]["nextQuestionId"];
@@ -252,11 +254,11 @@
       if (currentQuestionIndex == 0) {
         alert("je bent bij de eerste vraag!");
       } else {
+        explanationState = false;
+        document.getElementById("explanationDiv").innerHTML = "";
         givenAnswers.pop();
         currentQuestionIndex = questionPath.slice(-1);
         questionPath.pop();
-        console.log(questionPath)
-        console.log(givenAnswers)
         reduceProgressBar();
         deleteButtons();
         createButton();
@@ -294,7 +296,6 @@
   
     function createButton() {
       deleteButtons();
-      moveProgressBar();
       questionTextHeader.innerText =
         questions[currentQuestionIndex][0]["question"]["title"];
       var totalAnswer =
@@ -355,7 +356,7 @@
         }else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
           "card"){
           for(var i = 0; i < totalAnswer; i++){
-            document.getElementById("more").innerHTML += "<div class='generatedBtns' id="+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"] +" onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+            document.getElementById("more").innerHTML += "<div class='generatedBtns card' id="+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"] +" onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
           }
         } else {
           document.getElementById("more").innerHTML +=
