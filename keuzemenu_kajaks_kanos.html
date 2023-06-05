@@ -1,699 +1,479 @@
 <style>
-  #myProgress{
+  #myProgress {
     width: 100%;
     background-color: #ddd;
   }
-  #myBar{
+  #myBar {
     width: 1%;
     height: 20px;
-    background-color: #04AA6d; 
+    background-color: #04aa6d;
   }
   .card {
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
-  width: 40%;
-  display: inline-block;
-  margin: 10px;
-}
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    width: 40%;
+    margin: 5px;
+  }
 
-.card:hover {
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-}
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  }
 
-.card-container {
+  .card-container {
     padding: 2px 16px;
     flex-shrink: 3;
     margin: 5px;
-}
-#more{
+  }
+  .generatedBtns {
+    width: 50%;
+  }
+  #more {
     display: flex;
-}
-img{
-    width:100%;
-    height:60%;
-}
+  }
+  img {
+    width: 100%;
+    height: 60%;
+  }
 </style>
 <button id="modal-btn">keuzehulp</button>
 <div id="modal-content">
-    <div class="modal-inner-content">
-      <h1 id="questionTextHeader">test vraag 1</h1>
-    </div>
-    <div id="questionAnswerDiv">
-       <div id="more">
-       </div>
-    </div>
-    <div id="explanationDiv"></div>
-    
-    <br>
-    <div id="myProgress">
-      <div id="myBar"></div>
-    </div>
+  <div class="modal-inner-content">
+    <h1 id="questionTextHeader">test vraag 1</h1>
+  </div>
+  <div id="questionAnswerDiv">
+    <div id="more"></div>
+  </div>
+  <div id="explanationDiv"></div>
+
+  <br />
+  <div id="myProgress">
+    <div id="myBar"></div>
+  </div>
 </div>
 <script>
-     require(
-        [
-            'jquery',
-            'Magento_Ui/js/modal/modal'
-        ],
-
-        function($, modal) {
-            var options = {
-                type: 'popup',
-                responsive: true,
-                innerScroll: true,
-                title: 'bootman keuzehulp',
-                buttons: [{
-                    text: $.mage.__('back'),
-                    class: 'modal-close',
-                    click: function (){
-                        previousQuestion();
-                    }
-                },{
-                    text: $.mage.__('herstart keuzehulp'),
-                    class: 'modal-close',
-                    click: function (){
-                        restartForm();
-                    }
-                },{
-                    text: $.mage.__('close'),
-                    class: 'modal-close',
-                    click: function (){
-                        this.closeModal();
-                    }
-                }]
-            };
-            modal(options, $('#modal-content'));
-            $("#modal-btn").on('click',function(){
-                $("#modal-content").modal("openModal");
-            });
-        }
-    );
-var modal = document.getElementById("modal-row");
-var btn = document.getElementById("model-btn");
-var close = document.getElementById("close");
-var questionTextHeader = document.getElementById("questionTextHeader");
-var questions = [
-    [{
-        "question" : {
-            title : "Ben je op zoek naar kano's of kajaks?",
-            questionType : "standard",
-            explanation: "<table><thead><tr><th>Kenmerken</th><th>Kajak</th><th>Kano</th></tr></thead><tbody><tr><td>Vormen grootte</td><td>Smaller en slanker, beter voor snelheid en wendbaarheid</td><td>Breder en dieper, beter voor stabiliteit en bagage</td></tr><tr><td>Aantal personen</td><td>Meestal geschikt voor één tot twee personen</td><td>Meestal geschikt voor twee tot vierpersonen</td></tr><tr><td>Zit positie</td><td>Zittend op de bodem van de boot,met benen vooruit gestoken</td><td>Zittend op een stoel of bank, met benen plat op de bodem van de boot</td></tr><tr><td>Type wateren</td><td>Geschikt voor rustige wateren zoals meren en rivieren</td><td>Geschikt voor rustiger wateren zoals meren en rivieren, maar ook voor wildwater</td></tr><tr><td>Gebruiksgemak</td><td>Minderstabiel, maar makkelijker te manoeuvreren</td><td>Stabieler, maar minder wendbaar</td></tr></tbody></table>"
-        }
-    },"Kajaks","Kano's","more info"],
-    [{
-        "question" : {
-            title : "Op wat voor water ga je varen?",
-            questionType : "card",
-            explanation: "",
-            img: ["{{media url=&quot;wysiwyg/niet_stromend_water.jpg&quot;}}", "{{media url=&quot;wysiwyg/stromend_water.jpg&quot;}}"]
-        }
-    },"Niet stromend","stromend"],
-    [{
-        "question" : {
-            title : "Welke afstanden ben je van plan af te leggen?",
-            questionType : "standard",
-            explanation: "<table><thead><tr><th>Aantal km</th><th>Categorie</th></tr></thead><tbody><tr><td>0/20</td><td>korte afstanden</td></tr><tr><td>20/50</td><td>Middel lange afstande</td></tr><tr><td>50/100</td><td>lange afstanden</td></tr></tbody></table>"
-        }
-    },"korte afstanden", "middel lange afstanden" ,"lange afstanden", "more info"],
-    [{
-        "question" : {
-            title : "Wat is jouw niveau?",
-            questionType : "standard",
-            explanation: ""
-        }
-    },"beginner","ervaren"],
-    [{
-        "question" : {
-            title : "Wat wil je maximaal uitgeven?",
-            questionType : "inputField",
-            explanation: ""
-        }
-    }],
-    [{
-        "question" : {
-            title : "Heeft u nog een voorkeur qua merk?",
-            questionType : "dropdownMenu",
-            explanation: ""
-        }
-    }]
-];
-
-var kajakBrands = ["Aqua Marina", "Hydro Force", "Sevylor"];
-var kanoBrands = ["Aqua Marina", "Kalibri", "Sevylor"];
-var givenAnswers = [];
-var counter = 0;
-var barProgression = 0;
-var kajakOrKano = 0;
-var explanationState = false;
-
-function example() {
-          el = document.getElementById("example");
-          el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-        }
-function moveProgressBar(){
-    var questionsLen = questions.length;
-    var total_bar = 100/ questionsLen;
-    var elem = document.getElementById("myBar");
-    barProgression = barProgression + total_bar;
-    elem.style.width = barProgression + "%";
-}
-function restartProgressBar(){
-    var elem = document.getElementById("myBar");
-    elem.style.width = 1 + "%";
-    barProgression = 0;
-}
-function reduceProgressBar(){
-    var questionsLen = questions.length;
-    var elem = document.getElementById("myBar");
-    var total_bar = 100/ questionsLen;
-    barProgression = barProgression - total_bar;
-    elem.style.width = barProgression + "%";
-}
-function nQf(id) {
-    explanationState = false;
-    document.getElementById("explanationDiv").innerHTML = "";
-    var ids = [];
-    var givenAnswer = document.getElementById(id).value;
-    givenAnswer = createUrl(givenAnswer);
-    givenAnswers.push(givenAnswer);
-    console.log(givenAnswers);
-    if (givenAnswer == "Kajaks"){
-        kajakOrKano = 1;
-    } else if (givenAnswers == "Kano's" || givenAnswers == "Kano" ){
-        kajakOrKano = 0;
-    }
-    console.log(givenAnswer)
-    console.log(kajakOrKano)
-    //als button geen idee bevat verander id in create button metextra check dat het andere functie 
-    //triggered voor overzichtelijkere code. Nu worden checks te vaak gerund // slechte performance
-    deleteButtons();
-    moveProgressBar();
-    var modified_questionsLength = (questions.length) - 1;
-    if (counter < ((questions.length) - 1)) {
-        createButton();
-    } else {
-        if (kajakOrKano == 1){
-        questionTextHeader.innerText = "Deze kajaks passen het best bij jouw!";
-        var selectedProductsUrl = "https://bootman.nl/kajaks-kanos/opblaasbare-kajaks?"+"price=84.00-"+ givenAnswers[4] +"&prod_distances=" +givenAnswers[2] + "&prod_level="+ givenAnswers[3]+ "&prod_watertype_front=" + givenAnswers[1];
-        window.open(selectedProductsUrl, "_self");
-        }else{
-        questionTextHeader.innerText = "Deze kano's passen het best bij jouw!";
-        var selectedProductsUrl = "https://bootman.nl/kajaks-kanos/opblaasbare-kanos?"+"price=84.00-"+ givenAnswers[4] +"&prod_distances=" +givenAnswers[2] + "&prod_level="+ givenAnswers[3]+ "&prod_watertype_front=" + givenAnswers[1];
-        window.open(selectedProductsUrl, "_self");
-        }
-    }
-
-
-}
-
-function nextQuestionForCard(id) {
-    explanationState = false;
-    document.getElementById("explanationDiv").innerHTML = "";
-    var ids = [];
-    var givenAnswer = id
-    givenAnswer = createUrl(givenAnswer);
-    givenAnswers.push(givenAnswer);
-    deleteButtons();
-    moveProgressBar();
-    var modified_questionsLength = (questions.length) - 1;
-    if (counter < ((questions.length) - 1)) {
-        createButton();
-    } else {
-        if (kajakOrKano == 1){
-        questionTextHeader.innerText = "Deze kajaks passen het best bij jouw!";
-        var selectedProductsUrl = "https://bootman.nl/kajaks-kanos/opblaasbare-kajaks?"+"price=84.00-"+ givenAnswers[4] +"&prod_distances=" +givenAnswers[2] + "&prod_level="+ givenAnswers[3]+ "&prod_watertype_front=" + givenAnswers[1];
-        window.open(selectedProductsUrl, "_self");
-        }else{
-        questionTextHeader.innerText = "Deze kano's passen het best bij jouw!";
-        var selectedProductsUrl = "https://bootman.nl/kajaks-kanos/opblaasbare-kanos?"+"price=84.00-"+ givenAnswers[4] +"&prod_distances=" +givenAnswers[2] + "&prod_level="+ givenAnswers[3]+ "&prod_watertype_front=" + givenAnswers[1];
-        window.open(selectedProductsUrl, "_self");
-        }
-    }
-
-
-}
-
-function previousQuestion(){
-    console.log(counter)
-    if (counter == 0){
-        alert("je bent bij de eerste vraag!");
-    }else {
-        console.log(givenAnswers)
-        givenAnswers.pop()
-        counter = counter -2;
-        reduceProgressBar();
-        deleteButtons();
-        createButton();
-    }
-}
-
-function moreInfo(id){
-    console.log(explanationState);
-    if (explanationState == false){
-        document.getElementById("explanationDiv").innerHTML += questions[counter][0]["question"]["explanation"];
-        explanationState = true;
-    } else {
-        nQf(id);
-    }
-}
-
-function deleteButtons(){
-    var ids = [];
-    var elems = document.getElementsByClassName("generatedBtns");
-    for (var i = 0, len = elems.length; i < len; i++){
-        ids.push(elems[i].id);
-    }
-
-    if (ids[0] == "selectOptions"){
-        var id= document.getElementById(ids[0]);
-        id.parentNode.removeChild(id);
-    }  else {
-        for (var p = 0; p < ids.length; p++){
-            var id= document.getElementById(ids[p]);
-            id.parentNode.removeChild(id);
-        }
-    }
-}
-
-function createUrl(givenAnswer){
-    if (counter == 1) {
-        if(givenAnswer == "stromend"){
-            givenAnswer = "79688";
-            return givenAnswer;
-        }else {
-            return "79685";
-        }
-    } else if (counter == 2){
-      if(givenAnswer == "korte afstanden"){
-            givenAnswer = "79717";
-            return givenAnswer;
-        }else if (givenAnswer == "middel lange afstanden"){
-            return "79700";
-        }else {
-            return "79700";
-        }
-    } else if (counter == 3){
-        if(givenAnswer == "ervaren"){
-            givenAnswer = "79698";
-            return givenAnswer;
-        }else {
-            return "79702";
-        }
-    } else{
-        return givenAnswer;
-    }
-
-}
-
-function createButton(){ 
-  counter = counter + 1;
-  questionTextHeader.innerText = questions[counter][0]["question"]["title"];;
-  var totalAnswer = questions[counter].length;
-  if(questions[counter][0]["question"]["questionType"] == "dropdownMenu"){
-     if (kajakOrKano == 1){
-        document.getElementById("more").innerHTML += "<select class='generatedBtns' id='selectOptions' onchange='nQf(this.id)'><option class='generatedBtns' id='defaultButton' value='kies een merk'>kies een merk</option><option id='"+kajakBrands[0]+"' value="+kajakBrands[0]+">"+kajakBrands[0]+"</option><option id='"+kajakBrands[1]+"' value="+kajakBrands[1]+">"+kajakBrands[1]+"</option><option id='"+kajakBrands[2]+"' value="+kajakBrands[2]+">"+kajakBrands[2]+"</option></select>";
-     }else {
-       document.getElementById("more").innerHTML += "<select class='generatedBtns' id='selectOptions' onchange='nQf(this.id)'><option class='generatedBtns' id='defaultButton' value='kies een merk'>kies een merk</option><option class='generatedBtns' id='"+kanoBrands[0]+"' value="+kanoBrands[0]+">"+kanoBrands[0]+"</option><option class='generatedBtns' id='"+kanoBrands[1]+"' value="+kanoBrands[1]+">"+kanoBrands[1]+"</option><option class='generatedBtns' id='"+kanoBrands[2]+"' value="+kanoBrands[2]+">"+kanoBrands[2]+"</option></select>";
-      }
-    }else if(questions[counter][0]["question"]["questionType"] == "inputField"){
-        document.getElementById("more").innerHTML += "<input class='generatedBtns' id='budgetInput'></input><input class='generatedBtns' type='submit' value='submit' id='budgetSubmitBtn' onclick='budget()'></input>";
-    }else if (questions[counter][0]["question"]["questionType"] == "card") {
-        console.log("je wacht hier")
-        var imgIndex = 0;
-        for(var i = 1; i < totalAnswer; i++){
-            document.getElementById("more").innerHTML += "<div class='generatedBtns card' id="+questions[counter][0]["question"]["title"] +" onclick='nextQuestionForCard(this.id)'><img src='"+questions[counter][0]["question"]["img"][imgIndex] +"' alt=''/><div class='card-container'><h2>"+questions[counter][i]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
-            imgIndex++;
-        }
-    } else  {
-        for(var i = 1; i < totalAnswer; i++){
-            if(questions[counter][i] != "more info"){
-                
-                document.getElementById("more").innerHTML += "<button class='generatedBtns' id='button_ "+ i +"' value='"+questions[counter][i]+"' onclick='nQf(this.id)'>" + questions[counter][i] + "</button>";
-            } else {
-                
-                document.getElementById("more").innerHTML += "<button class='generatedBtns' id='button_ "+ i +"' value='"+questions[counter][i]+"' onclick='moreInfo(this.id)'>" + questions[counter][i] + "</button>";
-            }
-            
-        }
+  require(["jquery", "Magento_Ui/js/modal/modal"], function ($, modal) {
+    var options = {
+      type: "popup",
+      responsive: true,
+      innerScroll: true,
+      title: "bootman keuzehulp",
+      buttons: [
+        {
+          text: $.mage.__("back"),
+          class: "modal-close",
+          click: function () {
+            previousQuestion();
+          },
+        },
+        {
+          text: $.mage.__("herstart keuzehulp"),
+          class: "modal-close",
+          click: function () {
+            restartForm();
+          },
+        },
+        {
+          text: $.mage.__("close"),
+          class: "modal-close",
+          click: function () {
+            this.closeModal();
+          },
+        },
+      ],
     };
-}
-
-function budget(){
-    nQf("budgetInput");
-}
-function restartForm(){
-    counter = 0;
-    restartProgressBar()
-    document.getElementById("explanationDiv").innerHTML = "";
-    document.getElementById("more").innerHTML = "";
-    createStartButton()
-}
-function createStartButton(){ 
-    questionTextHeader.innerText = questions[counter][0]["question"]["title"];
-    var totalAnswer = questions[counter].length;
-    for(var i = 1; i < totalAnswer; i++){
-        if(questions[counter][i] != "more info"){
-                document.getElementById("more").innerHTML += "<button class='generatedBtns' id='button_ "+ i +"' value='"+questions[counter][i]+"' onclick='nQf(this.id)'>" + questions[counter][i] + "</button>";
-            } else {
-                document.getElementById("more").innerHTML += "<button class='generatedBtns' id='button_ "+ i +"' value='"+questions[counter][i]+"' onclick='moreInfo(this.id)'>" + questions[counter][i] + "</button>";
-            }
-    }
-};
-createStartButton();
-</script>
-
-
-
-------------
-<style>
-    #myProgress{
-      width: 100%;
-      background-color: #ddd;
-    }
-    #myBar{
-      width: 1%;
-      height: 20px;
-      background-color: #04AA6d; 
-    }
-    .card {
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    width: 40%;
-    display: inline-block;
-    margin: 10px;
-  }
-  
-  .card:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-  }
-  
-  .card-container {
-    padding: 2px 16px;
-  }
-  </style>
-  <button id="modal-btn">keuzehulp</button>
-  <div id="modal-content">
-      <div class="modal-inner-content">
-        <h1 id="questionTextHeader">test vraag 1</h1>
-      </div>
-      <div id="questionAnswerDiv">
-         <div id="more">
-         </div>
-      </div>
-      <div id="explanationDiv"></div>
-      
-      <br>
-      <div id="myProgress">
-        <div id="myBar"></div>
-      </div>
-  </div>
-  <script>
-       require(
-          [
-              'jquery',
-              'Magento_Ui/js/modal/modal'
-          ],
-  
-          function($, modal) {
-              var options = {
-                  type: 'popup',
-                  responsive: true,
-                  innerScroll: true,
-                  title: 'bootman keuzehulp',
-                  buttons: [{
-                      text: $.mage.__('back'),
-                      class: 'modal-close',
-                      click: function (){
-                          previousQuestion();
-                      }
-                  },{
-                      text: $.mage.__('herstart keuzehulp'),
-                      class: 'modal-close',
-                      click: function (){
-                          restartForm();
-                      }
-                  },{
-                      text: $.mage.__('close'),
-                      class: 'modal-close',
-                      click: function (){
-                          this.closeModal();
-                      }
-                  }]
-              };
-              modal(options, $('#modal-content'));
-              $("#modal-btn").on('click',function(){
-                  $("#modal-content").modal("openModal");
-              });
-          }
-      );
+    modal(options, $("#modal-content"));
+    $("#modal-btn").on("click", function () {
+      $("#modal-content").modal("openModal");
+    });
+  });
   var modal = document.getElementById("modal-row");
   var btn = document.getElementById("model-btn");
   var close = document.getElementById("close");
   var questionTextHeader = document.getElementById("questionTextHeader");
   var questions = [
-      [{
-          "question" : {
-              title : "Ben je op zoek naar kano's of kajaks?",
-              questionType : "standard",
-              explanation: "<table><thead><tr><th>Kenmerken</th><th>Kajak</th><th>Kano</th></tr></thead><tbody><tr><td>Vormen grootte</td><td>Smaller en slanker, beter voor snelheid en wendbaarheid</td><td>Breder en dieper, beter voor stabiliteit en bagage</td></tr><tr><td>Aantal personen</td><td>Meestal geschikt voor één tot twee personen</td><td>Meestal geschikt voor twee tot vierpersonen</td></tr><tr><td>Zit positie</td><td>Zittend op de bodem van de boot,met benen vooruit gestoken</td><td>Zittend op een stoel of bank, met benen plat op de bodem van de boot</td></tr><tr><td>Type wateren</td><td>Geschikt voor rustige wateren zoals meren en rivieren</td><td>Geschikt voor rustiger wateren zoals meren en rivieren, maar ook voor wildwater</td></tr><tr><td>Gebruiksgemak</td><td>Minderstabiel, maar makkelijker te manoeuvreren</td><td>Stabieler, maar minder wendbaar</td></tr></tbody></table>"
-          }
-      },"Kajaks","Kano's","more info"],
-      [{
-          "question" : {
-              title : "Op wat voor water ga je varen?",
-              questionType : "card",
-              explanation: "",
-              img: ["{{media url=wysiwyg/niet_stromend_water.jpg}}", "{{media url=wysiwyg/stromend_water.jpg}}"]
-          }
-      },"Niet stromend","stromend"],
-      [{
-          "question" : {
-              title : "Welke afstanden ben je van plan af te leggen?",
-              questionType : "standard",
-              explanation: "<table><thead><tr><th>Aantal km</th><th>Categorie</th></tr></thead><tbody><tr><td>0/20</td><td>korte afstanden</td></tr><tr><td>20/50</td><td>Middel lange afstande</td></tr><tr><td>50/100</td><td>lange afstanden</td></tr></tbody></table>"
-          }
-      },"korte afstanden", "middel lange afstanden" ,"lange afstanden", "more info"],
-      [{
-          "question" : {
-              title : "Wat is jouw niveau?",
-              questionType : "standard",
-              explanation: ""
-          }
-      },"beginner","ervaren"],
-      [{
-          "question" : {
-              title : "Wat wil je maximaal uitgeven?",
-              questionType : "inputField",
-              explanation: ""
-          }
-      }],
-      [{
-          "question" : {
-              title : "Heeft u nog een voorkeur qua merk?",
-              questionType : "dropdownMenu",
-              explanation: ""
-          }
-      }]
+    [
+      {
+        question: {
+          id: 0,
+          title: "Ben je op zoek naar kano's of kajaks?",
+          questionType: "standard",
+          answers: [
+            {
+              optionInfo: {
+                title: "Kano",
+                nextQuestionId: 1,
+              },
+            },
+            {
+              optionInfo: {
+                title: "Kajaks",
+                nextQuestionId: 1,
+              },
+            },
+          ],
+          explanation:
+            "<table><thead><tr><th>Kenmerken</th><th>Kajak</th><th>Kano</th></tr></thead><tbody><tr><td>Vormen grootte</td><td>Smaller en slanker, beter voor snelheid en wendbaarheid</td><td>Breder en dieper, beter voor stabiliteit en bagage</td></tr><tr><td>Aantal personen</td><td>Meestal geschikt voor één tot twee personen</td><td>Meestal geschikt voor twee tot vierpersonen</td></tr><tr><td>Zit positie</td><td>Zittend op de bodem van de boot,met benen vooruit gestoken</td><td>Zittend op een stoel of bank, met benen plat op de bodem van de boot</td></tr><tr><td>Type wateren</td><td>Geschikt voor rustige wateren zoals meren en rivieren</td><td>Geschikt voor rustiger wateren zoals meren en rivieren, maar ook voor wildwater</td></tr><tr><td>Gebruiksgemak</td><td>Minderstabiel, maar makkelijker te manoeuvreren</td><td>Stabieler, maar minder wendbaar</td></tr></tbody></table>",
+        },
+      },
+    ],
+    [
+      {
+        question: {
+          id: 1,
+          title: "Wat is jouw niveau?",
+          questionType: "standard",
+          answers: [
+            {
+              optionInfo: {
+                title: "Beginner",
+                nextQuestionId: 2,
+              },
+            },
+            {
+              optionInfo: {
+                title: "Gevorderd",
+                nextQuestionId: null,
+              },
+            },
+          ],
+          explanation: "",
+        },
+      },
+    ],
+    [
+      {
+        question: {
+          id: 2,
+          title: "Op wat voor water ga je varen?",
+          questionType: "card",
+          answers: [
+            {
+              optionInfo: {
+                title: "Niet stromend water",
+                value: "79685",
+                nextQuestionId: 3,
+                img: "{{media url=wysiwyg/niet_stromend_water.jpg}}",
+              },
+            },
+            {
+              optionInfo: {
+                title: "Stromend water",
+                value: "79688",
+                nextQuestionId: 3,
+                img: "{{media url=wysiwyg/stromend_water.jpg}}",
+              },
+            },
+          ],
+          explanation: "",
+        },
+      },
+    ],
+    [
+      {
+        question: {
+          id: 3,
+          title: "Wat is jouw budget (minimaal 59.00 euro)?",
+          questionType: "inputField",
+          answers: [
+            {
+              optionInfo: {
+                title: "[inputField]",
+                nextQuestionId: null,
+              },
+            },
+          ],
+          explanation: "",
+        },
+      },
+    ],
   ];
-  
-  var kajakBrands = ["Aqua Marina", "Hydro Force", "Sevylor"];
-  var kanoBrands = ["Aqua Marina", "Kalibri", "Sevylor"];
+
   var givenAnswers = [];
-  var counter = 0;
   var barProgression = 0;
-  var kajakOrKano = 0;
   var explanationState = false;
-  
+  var currentQuestionIndex = 0;
+  var questionPath = [];
+
   function example() {
-            el = document.getElementById("example");
-            el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-          }
-  function moveProgressBar(){
-      var questionsLen = questions.length;
-      var total_bar = 100/ questionsLen;
-      var elem = document.getElementById("myBar");
-      barProgression = barProgression + total_bar;
-      elem.style.width = barProgression + "%";
+    var el = document.getElementById("example");
+    el.style.visibility =
+      el.style.visibility == "visible" ? "hidden" : "visible";
   }
-  function restartProgressBar(){
-      var elem = document.getElementById("myBar");
-      elem.style.width = 1 + "%";
-      barProgression = 0;
+  function moveProgressBar() {
+    var questionsLen = questions.length;
+    var total_bar = 100 / questionsLen;
+    var elem = document.getElementById("myBar");
+    barProgression = barProgression + total_bar;
+    elem.style.width = barProgression + "%";
   }
-  function reduceProgressBar(){
-      var questionsLen = questions.length;
-      var elem = document.getElementById("myBar");
-      var total_bar = 100/ questionsLen;
-      barProgression = barProgression - total_bar;
-      elem.style.width = barProgression + "%";
+  function restartProgressBar() {
+    var elem = document.getElementById("myBar");
+    elem.style.width = 1 + "%";
+    barProgression = 0;
   }
-  function nQf(id) {
-      
-      // if (document.getElementById("explanationDiv")){
-      //     var deleteExplanationDiv = document.getElementById("explanationDiv");
-      //     deleteExplanationDiv.parentNode.removeChild(deleteExplanationDiv);
-      // }
+  function reduceProgressBar() {
+    var questionsLen = questions.length;
+    var elem = document.getElementById("myBar");
+    var total_bar = 100 / questionsLen;
+    barProgression = barProgression - total_bar;
+    elem.style.width = barProgression + "%";
+  }
+  function nextQuestion(id) {
+    explanationState = false;
+    document.getElementById("explanationDiv").innerHTML = "";
+    var totalAnswer =
+      questions[currentQuestionIndex][0]["question"]["answers"].length;
+    var answerOption =
+      questions[currentQuestionIndex][0]["question"]["answers"];
+
+    var ids = [];
+    var givenAnswer = id;
+    var previousQuestion = currentQuestionIndex;
+    questionPath.push(currentQuestionIndex);
+
+    moveProgressBar();
+    if (givenAnswer == "inputField") {
+      givenAnswer = document.getElementById(givenAnswer).value;
+      currentQuestionIndex = answerOption[0]["optionInfo"]["nextQuestionId"];
+    }
+    givenAnswers.push(givenAnswer);
+    manipulateAnswer(previousQuestion);
+    for (var i = 0; i < totalAnswer; i++) {
+      if (answerOption[i]["optionInfo"]["title"] == givenAnswer) {
+        currentQuestionIndex = answerOption[i]["optionInfo"]["nextQuestionId"];
+      }
+    }
+
+    if (currentQuestionIndex != null) {
+      createButton();
+    } else {
+      openURL();
+    }
+  }
+
+  function manipulateAnswer(number) {
+    if (number == 0) {
+      if (givenAnswers.slice(-1) == "Kano") {
+        givenAnswers.pop();
+        givenAnswers.push("opblaasbare-kanos");
+      } else if (givenAnswers.slice(-1) == "Kajaks") {
+        givenAnswers.pop();
+        givenAnswers.push("opblaasbare-kajaks");
+      }
+    } else if (number == 1) {
+      if (givenAnswers.slice(-1) == "Beginner") {
+        givenAnswers.pop();
+        givenAnswers.push("79702");
+      } else if (givenAnswers.slice(-1) == "Gevorderd") {
+        givenAnswers.pop();
+        givenAnswers.push("79698");
+      }
+    } else if (number == 2) {
+      if (givenAnswers.slice(-1) == "Stromend water") {
+        givenAnswers.pop();
+        givenAnswers.push("79688");
+      } else if (givenAnswers.slice(-1) == "Niet stromend water") {
+        givenAnswers.pop();
+        givenAnswers.push("79685");
+      }
+    }
+  }
+
+  function openURL() {
+    questionTextHeader.innerText = "Deze producten passen het best bij jouw!";
+    if (givenAnswers[0] == "opblaasbare-kajaks") {
+      var selectedProductsUrl =
+        "https://bootman.nl/kajaks-kanos/" +
+        givenAnswers[0] +
+        "?prod_level=" +
+        givenAnswers[1] +
+        "&prod_watertype_front=" +
+        givenAnswers[2] +
+        "&price=59.00-" +
+        givenAnswers.slice(-1);
+      window.open(selectedProductsUrl, "_self");
+    } else {
+      var selectedProductsUrl =
+        "https://bootman.nl/kajaks-kanos/" +
+        givenAnswers[0] +
+        "?prod_level=" +
+        givenAnswers[1] +
+        "&prod_watertype_front=" +
+        givenAnswers[2] +
+        "&price=59.00-" +
+        givenAnswers.slice(-1);
+      window.open(selectedProductsUrl, "_self");
+    }
+  }
+
+  function restartForm() {
+    currentQuestionIndex = 0;
+    givenAnswers = [];
+    questionPath = [];
+    restartProgressBar();
+    document.getElementById("explanationDiv").innerHTML = "";
+    document.getElementById("more").innerHTML = "";
+    createStartButton();
+  }
+
+  function previousQuestion() {
+    if (currentQuestionIndex == 0) {
+      alert("je bent bij de eerste vraag!");
+    } else {
       explanationState = false;
       document.getElementById("explanationDiv").innerHTML = "";
-      var ids = [];
-      var givenAnswer = document.getElementById(id).value;
-      givenAnswer = createUrl(givenAnswer);
-      givenAnswers.push(givenAnswer);
-      console.log(givenAnswers);
-      if (givenAnswer == "Kajaks"){
-          kajakOrKano = 1;
-      } else if (givenAnswers == "Kano's" || givenAnswers == "Kano" ){
-          kajakOrKano = 0;
-      }
-      console.log(givenAnswer)
-      console.log(kajakOrKano)
-      //als button geen idee bevat verander id in create button metextra check dat het andere functie 
-      //triggered voor overzichtelijkere code. Nu worden checks te vaak gerund // slechte performance
+      givenAnswers.pop();
+      currentQuestionIndex = questionPath.slice(-1);
+      questionPath.pop();
+      reduceProgressBar();
       deleteButtons();
-      moveProgressBar();
-      var modified_questionsLength = (questions.length) - 1;
-      if (counter < ((questions.length) - 1)) {
-          createButton();
-      } else {
-          if (kajakOrKano == 1){
-          questionTextHeader.innerText = "Deze kajaks passen het best bij jouw!";
-          var selectedProductsUrl = "https://bootman.nl/kajaks-kanos/opblaasbare-kajaks?"+"price=84.00-"+ givenAnswers[4] +"&prod_distances=" +givenAnswers[2] + "&prod_level="+ givenAnswers[3]+ "&prod_watertype_front=" + givenAnswers[1];
-          window.open(selectedProductsUrl, "_self");
-          }else{
-          questionTextHeader.innerText = "Deze kano's passen het best bij jouw!";
-          var selectedProductsUrl = "https://bootman.nl/kajaks-kanos/opblaasbare-kanos?"+"price=84.00-"+ givenAnswers[4] +"&prod_distances=" +givenAnswers[2] + "&prod_level="+ givenAnswers[3]+ "&prod_watertype_front=" + givenAnswers[1];
-          window.open(selectedProductsUrl, "_self");
-          }
-      }
-  
-  
+      createButton();
+    }
   }
-  
-  function previousQuestion(){
-      console.log(counter)
-      if (counter == 0){
-          alert("je bent bij de eerste vraag!");
-      }else {
-          console.log(givenAnswers)
-          givenAnswers.pop()
-          counter = counter -2;
-          reduceProgressBar();
-          deleteButtons();
-          createButton();
-      }
+
+  function moreInfo(id) {
+    console.log(explanationState);
+    if (explanationState == false) {
+      document.getElementById("explanationDiv").innerHTML +=
+        questions[currentQuestionIndex][0]["question"]["explanation"];
+      explanationState = true;
+      var id = document.getElementById("MoreInfoBtn");
+      id.parentNode.removeChild(id);
+    } else {
+      nextQuestion(id);
+    }
   }
-  
-  function moreInfo(id){
-      console.log(explanationState);
-      if (explanationState == false){
-          document.getElementById("explanationDiv").innerHTML += questions[counter][0]["question"]["explanation"];
-          explanationState = true;
-      } else {
-          nQf(id);
+
+  function deleteButtons() {
+    var ids = [];
+    var elems = document.getElementsByClassName("generatedBtns");
+    for (var i = 0, len = elems.length; i < len; i++) {
+      ids.push(elems[i].id);
+    }
+
+    if (ids[0] == "selectOptions") {
+      var id = document.getElementById(ids[0]);
+      id.parentNode.removeChild(id);
+    } else {
+      for (var p = 0; p < ids.length; p++) {
+        var id = document.getElementById(ids[p]);
+        id.parentNode.removeChild(id);
       }
+    }
   }
-  
-  function deleteButtons(){
-      var ids = [];
-      var elems = document.getElementsByClassName("generatedBtns");
-      for (var i = 0, len = elems.length; i < len; i++){
-          ids.push(elems[i].id);
-      }
-  
-      if (ids[0] == "selectOptions"){
-          var id= document.getElementById(ids[0]);
-          id.parentNode.removeChild(id);
-      }  else {
-          for (var p = 0; p < ids.length; p++){
-              var id= document.getElementById(ids[p]);
-              id.parentNode.removeChild(id);
-          }
-      }
-  }
-  
-  function createUrl(givenAnswer){
-      if (counter == 1) {
-          if(givenAnswer == "stromend"){
-              givenAnswer = "79688";
-              return givenAnswer;
-          }else {
-              return "79685";
-          }
-      } else if (counter == 2){
-        if(givenAnswer == "korte afstanden"){
-              givenAnswer = "79717";
-              return givenAnswer;
-          }else if (givenAnswer == "middel lange afstanden"){
-              return "79700";
-          }else {
-              return "79700";
-          }
-      } else if (counter == 3){
-          if(givenAnswer == "ervaren"){
-              givenAnswer = "79698";
-              return givenAnswer;
-          }else {
-              return "79702";
-          }
-      } else{
-          return givenAnswer;
-      }
-  
-  }
-  
-  function createButton(){ 
-    counter = counter + 1;
-    questionTextHeader.innerText = questions[counter][0]["question"]["title"];;
-    var totalAnswer = questions[counter].length;
-    if(questions[counter][0]["question"]["questionType"] == "dropdownMenu"){
-       if (kajakOrKano == 1){
-          document.getElementById("more").innerHTML += "<select class='generatedBtns' id='selectOptions' onchange='nQf(this.id)'><option class='generatedBtns' id='defaultButton' value='kies een merk'>kies een merk</option><option id='"+kajakBrands[0]+"' value="+kajakBrands[0]+">"+kajakBrands[0]+"</option><option id='"+kajakBrands[1]+"' value="+kajakBrands[1]+">"+kajakBrands[1]+"</option><option id='"+kajakBrands[2]+"' value="+kajakBrands[2]+">"+kajakBrands[2]+"</option></select>";
-       }else {
-         document.getElementById("more").innerHTML += "<select class='generatedBtns' id='selectOptions' onchange='nQf(this.id)'><option class='generatedBtns' id='defaultButton' value='kies een merk'>kies een merk</option><option class='generatedBtns' id='"+kanoBrands[0]+"' value="+kanoBrands[0]+">"+kanoBrands[0]+"</option><option class='generatedBtns' id='"+kanoBrands[1]+"' value="+kanoBrands[1]+">"+kanoBrands[1]+"</option><option class='generatedBtns' id='"+kanoBrands[2]+"' value="+kanoBrands[2]+">"+kanoBrands[2]+"</option></select>";
+
+  function createButton() {
+    deleteButtons();
+
+    questionTextHeader.innerText =
+      questions[currentQuestionIndex][0]["question"]["title"];
+    var totalAnswer =
+      questions[currentQuestionIndex][0]["question"]["answers"].length;
+    for (var i = 0; i < totalAnswer; i++) {
+      if (
+        questions[currentQuestionIndex][0]["question"]["questionType"] ==
+        "standard"
+      ) {
+        document.getElementById("more").innerHTML +=
+          "<button class='generatedBtns' id='" +
+          questions[currentQuestionIndex][0]["question"]["answers"][i][
+            "optionInfo"
+          ]["title"] +
+          "' value='" +
+          questions[currentQuestionIndex][0]["question"]["answers"][i][
+            "optionInfo"
+          ]["value"] +
+          "' onclick='nextQuestion(this.id)'>" +
+          questions[currentQuestionIndex][0]["question"]["answers"][i][
+            "optionInfo"
+          ]["title"] +
+          "</button>";
+      } else if (
+        questions[currentQuestionIndex][0]["question"]["questionType"] ==
+        "inputField"
+      ) {
+        document.getElementById("more").innerHTML +=
+          "<input class='generatedBtns' id='inputField'></input><input class='generatedBtns' type='submit' value='submit' id='budgetSubmitBtn' onclick='nextQuestion(\"inputField\")'></input>";
+      } else if (
+        questions[currentQuestionIndex][0]["question"]["questionType"] == "card"
+      ) {
+        for (var i = 0; i < totalAnswer; i++) {
+          document.getElementById("more").innerHTML +=
+            "<div class='generatedBtns card' id='" +
+            questions[currentQuestionIndex][0]["question"]["answers"][i][
+              "optionInfo"
+            ]["title"] +
+            "' onclick='nextQuestion(this.id)'><img src='" +
+            questions[currentQuestionIndex][0]["question"]["answers"][i][
+              "optionInfo"
+            ]["img"] +
+            "' alt=''/><div class='card-container'><h2>" +
+            questions[currentQuestionIndex][0]["question"]["answers"][i][
+              "optionInfo"
+            ]["title"] +
+            "</h2><p></p></div></div>";
         }
-      }else if(questions[counter][0]["question"]["questionType"] == "inputField"){
-          document.getElementById("more").innerHTML += "<input class='generatedBtns' id='budgetInput'></input><input class='generatedBtns' type='submit' value='submit' id='budgetSubmitBtn' onclick='budget()'></input>";
-      }else if (questions[counter][0]["question"]["questionType"] == "card") {
-          console.log("je wacht hier")
-          var imgIndex = 0;
-          for(var i = 1; i < totalAnswer; i++){
-              document.getElementById("more").innerHTML += "<div class='generatedBtns card'><img src='"+questions[counter][0]["question"]["img"][imgIndex] +"' alt=''/><div class='card-container'><h2>"+questions[counter][i]+"</h2><p>explain de muf asndaibfashbfahjbfjhabfjhsbjfabsfhjabfsjahbsfjhs</p></div></div>";
-              imgIndex++;
-          }
-      } else  {
-          for(var i = 1; i < totalAnswer; i++){
-              if(questions[counter][i] != "more info"){
-                  
-                  document.getElementById("more").innerHTML += "<button class='generatedBtns' id='button_ "+ i +"' value='"+questions[counter][i]+"' onclick='nQf(this.id)'>" + questions[counter][i] + "</button>";
-              } else {
-                  
-                  document.getElementById("more").innerHTML += "<button class='generatedBtns' id='button_ "+ i +"' value='"+questions[counter][i]+"' onclick='moreInfo(this.id)'>" + questions[counter][i] + "</button>";
-              }
-              
-          }
-      };
-  }
-  
-  function budget(){
-      nQf("budgetInput");
-  }
-  function restartForm(){
-      counter = 0;
-      restartProgressBar()
-      document.getElementById("explanationDiv").innerHTML = "";
-      document.getElementById("more").innerHTML = "";
-      createStartButton()
-  }
-  function createStartButton(){ 
-      questionTextHeader.innerText = questions[counter][0]["question"]["title"];
-      var totalAnswer = questions[counter].length;
-      for(var i = 1; i < totalAnswer; i++){
-          if(questions[counter][i] != "more info"){
-                  document.getElementById("more").innerHTML += "<button class='generatedBtns' id='button_ "+ i +"' value='"+questions[counter][i]+"' onclick='nQf(this.id)'>" + questions[counter][i] + "</button>";
-              } else {
-                  document.getElementById("more").innerHTML += "<button class='generatedBtns' id='button_ "+ i +"' value='"+questions[counter][i]+"' onclick='moreInfo(this.id)'>" + questions[counter][i] + "</button>";
-              }
       }
-  };
+    }
+    if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
+      document.getElementById("more").innerHTML +=
+        "<button class='generatedBtns' id='MoreInfoBtn' onclick='moreInfo()'>meer info</button>";
+    }
+  }
+
+  function createStartButton() {
+    questionTextHeader.innerText =
+      questions[currentQuestionIndex][0]["question"]["title"];
+    var totalAnswer =
+      questions[currentQuestionIndex][0]["question"]["answers"].length;
+    console.log(totalAnswer);
+    for (var i = 0; i < totalAnswer; i++) {
+      if (
+        questions[currentQuestionIndex][0]["question"]["questionType"] ==
+        "standard"
+      ) {
+        document.getElementById("more").innerHTML +=
+          "<button class='generatedBtns' id='" +
+          questions[0][0]["question"]["answers"][i]["optionInfo"]["title"] +
+          "' value='" +
+          questions[0][0]["question"]["answers"][i]["optionInfo"]["title"] +
+          "' onclick='nextQuestion(this.id)'>" +
+          questions[0][0]["question"]["answers"][i]["optionInfo"]["title"] +
+          "</button>";
+      } else if (
+        questions[currentQuestionIndex][0]["question"]["questionType"] == "card"
+      ) {
+        for (var i = 0; i < totalAnswer; i++) {
+          document.getElementById("more").innerHTML +=
+            "<div class='generatedBtns card' id='" +
+            questions[currentQuestionIndex][0]["question"]["answers"][i][
+              "optionInfo"
+            ]["title"] +
+            "' onclick='nextQuestion(this.id)'><img src='" +
+            questions[currentQuestionIndex][0]["question"]["answers"][i][
+              "optionInfo"
+            ]["img"] +
+            "' alt=''/><div class='card-container'><h2>" +
+            questions[currentQuestionIndex][0]["question"]["answers"][i][
+              "optionInfo"
+            ]["title"] +
+            "</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+        }
+      } else {
+        document.getElementById("more").innerHTML +=
+          "<button class='generatedBtns' id='button_ " +
+          i +
+          "' value='" +
+          questions[0][i] +
+          "' onclick='moreInfo(this.id)'>" +
+          questions[0][i] +
+          "</button>";
+      }
+    }
+    if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
+      document.getElementById("more").innerHTML +=
+        "<button class='generatedBtns' id='MoreInfoBtn' onclick='moreInfo()'>meer info</button>";
+    }
+  }
   createStartButton();
-  </script>
+</script>

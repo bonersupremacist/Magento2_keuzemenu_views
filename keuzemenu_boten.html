@@ -102,7 +102,6 @@
               optionInfo: {
                 title: "Rubberboot",
                 nextQuestionId: 1,
-                value: 1,
                 img: "{{media url=&quot;wysiwyg/car.jpg&quot;}}"
               },
             },
@@ -110,7 +109,6 @@
               optionInfo: {
                 title: "Opblaasboot",
                 nextQuestionId: 1,
-                value: 2,
                 img: "{{media url=&quot;wysiwyg/boat.jpg&quot;}}"
               },
             },
@@ -119,7 +117,6 @@
                 title:
                   "Karperboot",
                 nextQuestionId: 1,
-                value: 3,
                 img: "{{media url=&quot;wysiwyg/truckk.jpg&quot;}}"
               },
             },
@@ -128,7 +125,6 @@
                 title:
                   "geen idee",
                 nextQuestionId: 2,
-                value: 4,
                 img: ""
               },
             },
@@ -149,7 +145,6 @@
               optionInfo: {
                 title: "[inputField]",
                 nextQuestionId: 3,
-                value: 1,
               },
             },
           ],
@@ -169,21 +164,18 @@
               optionInfo: {
                 title: "Vissen",
                 nextQuestionId: 1,
-                value: 1,
               },
             },
             {
               optionInfo: {
                 title: "Ontspanning",
                 nextQuestionId: 1,
-                value: 2,
               },
             },
             {
               optionInfo: {
                 title: "Water leren kennen met kinderen, gezinsboot",
                 nextQuestionId: 1,
-                value: 3,
               },
             },
           ],
@@ -203,7 +195,6 @@
               optionInfo: {
                 title: "[inputField]]",
                 nextQuestionId: null,
-                value: 1,
               },
             },
           ],
@@ -274,8 +265,6 @@
       currentQuestionIndex = answerOption[0]["optionInfo"]["nextQuestionId"];
     }
     givenAnswers.push(givenAnswer);
-    
-    console.log(givenAnswers);
 
     for (var i = 0; i < totalAnswer; i++) {
       if (answerOption[i]["optionInfo"]["title"] == givenAnswer) {
@@ -347,7 +336,6 @@
   }
 
   function previousQuestion() {
-    console.log(counter);
     if (currentQuestionIndex == 0) {
       alert("je bent bij de eerste vraag!");
     } else {
@@ -363,15 +351,17 @@
   }
 
   function moreInfo(id) {
-    console.log(explanationState);
-    if (explanationState == false) {
-      document.getElementById("explanationDiv").innerHTML +=
-      questions[currentQuestionIndex][0]["question"]["explanation"]
-      explanationState = true;
-    } else {
-      nextQuestion(id);
+      console.log(explanationState);
+      if (explanationState == false) {
+        document.getElementById("explanationDiv").innerHTML +=
+        questions[currentQuestionIndex][0]["question"]["explanation"]
+        explanationState = true;
+        var id = document.getElementById("MoreInfoBtn");
+        id.parentNode.removeChild(id);
+      } else {
+        nextQuestion(id);
+      }
     }
-  }
 
   function deleteButtons() {
     var ids = [];
