@@ -16,7 +16,7 @@
   }
 
   .card:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px 0 rgba(142, 84, 84, 0.2);
   }
 
   .card-container {
@@ -99,9 +99,9 @@
       $("#modal-content").modal("openModal");
     });
   });
-  var modal = document.getElementById("modal-row");
-  var btn = document.getElementById("model-btn");
-  var close = document.getElementById("close");
+  // var modal = document.getElementById("modal-row");
+  // var btn = document.getElementById("model-btn");
+  // var close = document.getElementById("close");
   var questionTextHeader = document.getElementById("questionTextHeader");
   var questions = [
     [
@@ -163,7 +163,7 @@
             },
           ],
           explanation:
-            '<h1>PowerCalculator</h1><labelfor="numPersons">NumberofPersons:</label><input type="number"id="numPersons"placeholder="Aantal personen"><br><br><labelfor="BoatWeight">BoatWeight:</label><input type="number"id="boatWeight"placeholder="gewicht van de boot"><br><br><button onclick="calculatePower()">Bereken</button><br><br><div id="result"></div>',
+            '<h1>Power Calculator</h1><labelfor="numPersons">NumberofPersons:</label><input type="number"id="numPersons"placeholder="Aantal personen"><br><br><labelfor="BoatWeight">BoatWeight:</label><input type="number"id="boatWeight"placeholder="gewicht van de boot"><br><br><button onclick="calculatePower()">Bereken</button><br><br><div id="result"></div>',
         },
       },
     ],
@@ -213,15 +213,14 @@
   ];
 
   var givenAnswers = [];
-  var counter = 0;
   var barProgression = 0;
   var explanationState = false;
   var currentQuestionIndex = 0;
   var questionPath = [];
-  var totalWeight = 0;
+  // var totalWeight = 0;
 
   function example() {
-    el = document.getElementById("example");
+    var el = document.getElementById("example");
     el.style.visibility =
       el.style.visibility == "visible" ? "hidden" : "visible";
   }
@@ -276,32 +275,22 @@
       questions[currentQuestionIndex][0]["question"]["answers"].length;
     var answerOption =
       questions[currentQuestionIndex][0]["question"]["answers"];
-
-    var ids = [];
     var givenAnswer = id;
-    var previousQuestion = currentQuestionIndex;
     questionPath.push(currentQuestionIndex);
+    moveProgressBar();
     if (givenAnswer == "inputField") {
       givenAnswer = document.getElementById(givenAnswer).value;
       currentQuestionIndex = answerOption[0]["optionInfo"]["nextQuestionId"];
     }
     givenAnswers.push(givenAnswer);
+    manipulateAnswer(currentQuestionIndex);
 
     for (var i = 0; i < totalAnswer; i++) {
       if (answerOption[i]["optionInfo"]["title"] == givenAnswer) {
-        console.log(answerOption[i]["optionInfo"]["nextQuestionId"]);
         currentQuestionIndex = answerOption[i]["optionInfo"]["nextQuestionId"];
       }
     }
-    console.log("current question index is " + currentQuestionIndex);
-    manipulateAnswer(currentQuestionIndex);
-    moveProgressBar();
-
-    if (
-      questions[previousQuestion][0]["question"]["answers"][0]["optionInfo"][
-        "nextQuestionId"
-      ] != null
-    ) {
+    if (currentQuestionIndex != null) {
       createButton();
     } else {
       openURL();
@@ -309,18 +298,22 @@
   }
 
   function manipulateAnswer(number) {
-    number = number - 1;
     if (number == 0) {
-      if (givenAnswers[0] == "gevorderd") {
+      if (givenAnswers[0] == "elektrische boten") {
         givenAnswers.pop();
-        givenAnswers.push("79698");
+        givenAnswers.push("elektrisch-varen");
       } else {
         givenAnswers.pop();
         givenAnswers.push("79702");
       }
     } else if (number == 1) {
-      totalWeight = givenAnswers.pop() * 70;
-      givenAnswers.push(totalWeight.toString());
+      if (givenAnswers.slice(-1) < 80){
+        givenAnswers.pop();
+        givenAnswers.push("fluistermotoren");
+      } else {
+        givenAnswers.pop();
+        givenAnswers.push("elektrische-buitenboordmotoren");
+      }
     }
   }
 
@@ -369,8 +362,8 @@
       document.getElementById("explanationDiv").innerHTML +=
         questions[currentQuestionIndex][0]["question"]["explanation"];
       explanationState = true;
-      var id = document.getElementById("MoreInfoBtn");
-      id.parentNode.removeChild(id);
+      var moreInfoButton = document.getElementById("MoreInfoBtn");
+      moreInfoButton.parentNode.removeChild(id);
     } else {
       nextQuestion(id);
     }
@@ -429,7 +422,7 @@
       } else if (
         questions[currentQuestionIndex][0]["question"]["questionType"] == "card"
       ) {
-        for (var i = 0; i < totalAnswer; i++) {
+        for (var p = 0; p < totalAnswer; p++) {
           document.getElementById("more").innerHTML +=
             "<div class='generatedBtns card' id='" +
             questions[currentQuestionIndex][0]["question"]["answers"][i][
@@ -448,8 +441,7 @@
       }
     }
     if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
-      document.getElementById("more").innerHTML +=
-        "<button class='generatedBtns' id='MoreInfoBtn' onclick='moreInfo()'>meer info</button>";
+      moreInfo()
     }
   }
 
@@ -475,7 +467,7 @@
       } else if (
         questions[currentQuestionIndex][0]["question"]["questionType"] == "card"
       ) {
-        for (var i = 0; i < totalAnswer; i++) {
+        for (var t = 0; t < totalAnswer; t++) {
           document.getElementById("more").innerHTML +=
             "<div class='generatedBtns card' id='" +
             questions[currentQuestionIndex][0]["question"]["answers"][i][

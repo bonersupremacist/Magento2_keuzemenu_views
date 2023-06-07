@@ -23,10 +23,10 @@
   .card-container {
     padding: 2px 16px;
   }
-  .generatedBtns{
-    width:50%;
+  .generatedBtns {
+    width: 50%;
   }
-  #more{
+  #more {
     align-content: center;
   }
   img {
@@ -87,9 +87,6 @@
       $("#modal-content").modal("openModal");
     });
   });
-  var modal = document.getElementById("modal-row");
-  var btn = document.getElementById("model-btn");
-  var close = document.getElementById("close");
   var questionTextHeader = document.getElementById("questionTextHeader");
   var questions = [
     [
@@ -342,9 +339,9 @@
   var questionPath = [];
 
   function example() {
-    el = document.getElementById("example");
+    var el = document.getElementById("example");
     el.style.visibility =
-      el.style.visibility == "visible" ? "hidden" : "visible";
+    el.style.visibility == "visible" ? "hidden" : "visible";
   }
   function moveProgressBar() {
     var questionsLen = questions.length;
@@ -366,7 +363,6 @@
     elem.style.width = barProgression + "%";
   }
   function nQf(id) {
-    var ids = [];
     var givenAnswer = document.getElementById(id).value;
     var totalAnswer =
       questions[currentQuestionIndex][0]["question"]["answers"].length;
@@ -399,13 +395,13 @@
           sum += parseInt(value);
         }
       }
+      var selectedProductsUrl = "https://bootman.nl/elektra/accus?";
       let avg = sum / givenAnswers.length;
       let roundedAvg = Math.round(avg);
       if (roundedAvg == 3) {
         questionTextHeader.innerText =
           "Deze lood-accus passen het best bij jouw!";
-        var selectedProductsUrl =
-          "https://bootman.nl/elektra/accus?" +
+        selectedProductsUrl =
           "price=84.00-" +
           givenAnswers.slice(-1) +
           "&prod_batterytype=79709";
@@ -413,8 +409,7 @@
       } else if (roundedAvg == 2) {
         questionTextHeader.innerText =
           "Deze AGM-accus passen het best bij jouw!";
-        var selectedProductsUrl =
-          "https://bootman.nl/elektra/accus?" +
+        selectedProductsUrl =
           "price=84.00-" +
           givenAnswers.slice(-1) +
           "&prod_batterytype=79715";
@@ -422,8 +417,7 @@
       } else {
         questionTextHeader.innerText =
           "Deze lithium-accus passen het best bij jouw!";
-        var selectedProductsUrl =
-          "https://bootman.nl/elektra/accus?" +
+        selectedProductsUrl =
           "price=84.00-" +
           givenAnswers.slice(-1) +
           "&prod_batterytype=79705";
@@ -450,8 +444,8 @@
       givenAnswers.pop();
       currentQuestionIndex = questionPath.slice(-1);
       questionPath.pop();
-      console.log(questionPath)
-      console.log(givenAnswers)
+      console.log(questionPath);
+      console.log(givenAnswers);
       reduceProgressBar();
       deleteButtons();
       createButton();

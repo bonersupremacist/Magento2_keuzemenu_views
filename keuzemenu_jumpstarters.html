@@ -175,9 +175,9 @@
     var questionPath = [];
   
     function example() {
-      el = document.getElementById("example");
+      var el = document.getElementById("example");
       el.style.visibility =
-        el.style.visibility == "visible" ? "hidden" : "visible";
+      el.style.visibility == "visible" ? "hidden" : "visible";
     }
     function moveProgressBar() {
       var questionsLen = questions.length;
@@ -322,8 +322,8 @@
         }
         else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
           "card"){
-          for(var i = 0; i < totalAnswer; i++){
-            document.getElementById("more").innerHTML += "<div class='generatedBtns card' id="+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"] +" onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+          for(var t = 0; t < totalAnswer; t++){
+            document.getElementById("more").innerHTML += "<div class='generatedBtns card' id="+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"] +" onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
           }
         }
       }
@@ -351,8 +351,8 @@
             "</button>";
         }else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
           "card"){
-          for(var i = 0; i < totalAnswer; i++){
-            document.getElementById("more").innerHTML += "<div class='generatedBtns card' id="+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"] +" onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+          for(var t = 0; t < totalAnswer; t++){
+            document.getElementById("more").innerHTML += "<div class='generatedBtns card' id="+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"] +" onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
           }
         } else {
           document.getElementById("more").innerHTML +=

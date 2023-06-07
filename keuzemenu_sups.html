@@ -165,9 +165,9 @@
   var totalWeight = 0;
 
   function example() {
-    el = document.getElementById("example");
+    var el = document.getElementById("example");
     el.style.visibility =
-      el.style.visibility == "visible" ? "hidden" : "visible";
+    el.style.visibility == "visible" ? "hidden" : "visible";
   }
   function moveProgressBar() {
     var questionsLen = questions.length;
@@ -207,10 +207,9 @@
     questions[currentQuestionIndex][0]["question"]["answers"].length;
     var answerOption =
     questions[currentQuestionIndex][0]["question"]["answers"];
-
-    var ids = [];
     var givenAnswer = id;
     var previousQuestion = currentQuestionIndex;
+
     questionPath.push(currentQuestionIndex);
     if(givenAnswer == "inputField"){
       givenAnswer = document.getElementById(givenAnswer).value;
@@ -296,8 +295,8 @@
         document.getElementById("explanationDiv").innerHTML +=
         questions[currentQuestionIndex][0]["question"]["explanation"]
         explanationState = true;
-        var id = document.getElementById("MoreInfoBtn");
-        id.parentNode.removeChild(id);
+        var moreInfoButton = document.getElementById("MoreInfoBtn");
+        moreInfoButton.parentNode.removeChild(id);
       } else {
         nextQuestion(id);
       }
@@ -357,8 +356,8 @@
       }
       else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
         "card"){
-        for(var i = 0; i < totalAnswer; i++){
-          document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+        for(var t = 0; t < totalAnswer; t++){
+          document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
         }
       }
       if(questions[currentQuestionIndex][0]["question"]["explanation"] !=
@@ -394,8 +393,8 @@
           "</button>";
       }else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
         "card"){
-        for(var i = 0; i < totalAnswer; i++){
-          document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+        for(var t = 0; t < totalAnswer; t++){
+          document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
         }
       } else {
         document.getElementById("more").innerHTML +=

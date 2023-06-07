@@ -213,9 +213,9 @@
   var questionPath = [];
 
   function example() {
-    el = document.getElementById("example");
+    var el = document.getElementById("example");
     el.style.visibility =
-      el.style.visibility == "visible" ? "hidden" : "visible";
+    el.style.visibility == "visible" ? "hidden" : "visible";
   }
   function moveProgressBar() {
     var questionsLen = questions.length;
@@ -255,8 +255,6 @@
     questions[currentQuestionIndex][0]["question"]["answers"].length;
     var answerOption =
     questions[currentQuestionIndex][0]["question"]["answers"];
-
-    var ids = [];
     var givenAnswer = id;
     var previousQuestion = currentQuestionIndex;
     questionPath.push(currentQuestionIndex);
@@ -302,6 +300,8 @@
 
   function openURL(){
     var weight = 0;
+    var baseUrl = "https://bootman.nl/boten-motoren/boten/rubberboten?price=0-" ;
+    var selectedProductsUrl = "";
     if(givenAnswers[0] == "geen idee"){
       givenAnswers.shift();
     }
@@ -310,16 +310,16 @@
 
     if (givenAnswers[0] == "Rubberboot"){
       questionTextHeader.innerText = "Deze rubberboten passen het best bij jouw!";
-      var selectedProductsUrl ="https://bootman.nl/boten-motoren/boten/rubberboten?price=0-" + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
+      selectedProductsUrl = baseUrl + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
       window.open(selectedProductsUrl, "_self");
     } 
     else if (givenAnswers[0] == "Opblaasboot"){
       questionTextHeader.innerText = "Deze opblaasboten passen het best bij jouw!";
-      var selectedProductsUrl ="https://bootman.nl/boten-motoren/boten/Opblaasboten?price=0-" + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
+      selectedProductsUrl = baseUrl + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
       window.open(selectedProductsUrl, "_self");
     } else if (givenAnswers[0] == "Karperboot"){
       questionTextHeader.innerText = "Deze karperboten passen het best bij jouw!";
-      var selectedProductsUrl ="https://bootman.nl/boten-motoren/boten/karperboten?price=0-" + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
+      selectedProductsUrl = baseUrl + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
       window.open(selectedProductsUrl, "_self");
     }
     
@@ -356,8 +356,8 @@
         document.getElementById("explanationDiv").innerHTML +=
         questions[currentQuestionIndex][0]["question"]["explanation"]
         explanationState = true;
-        var id = document.getElementById("MoreInfoBtn");
-        id.parentNode.removeChild(id);
+        var moreInfoButton = document.getElementById("MoreInfoBtn");
+        moreInfoButton.parentNode.removeChild(id);
       } else {
         nextQuestion(id);
       }
@@ -415,8 +415,8 @@
       }
       else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
         "card"){
-        for(var i = 0; i < totalAnswer; i++){
-          document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+        for(var p = 0; p < totalAnswer; p++){
+          document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][p]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][p]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][p]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
         }
       }
       if(questions[currentQuestionIndex][0]["question"]["explanation"] !=
@@ -451,8 +451,8 @@
           "</button>";
       }else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
         "card"){
-        for(var i = 0; i < totalAnswer; i++){
-          document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+        for(var t = 0; t < totalAnswer; t++){
+          document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
         }
       } else {
         document.getElementById("more").innerHTML +=
