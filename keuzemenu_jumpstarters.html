@@ -35,7 +35,7 @@
     height: 60%;
   }
 </style>
-<button id="modal-btn">keuzehulp</button>
+<button id="modal-btn" onclick="createStartButton()">keuzehulp</button>
 <div id="modal-content">
   <div class="modal-inner-content">
     <h1 id="questionTextHeader">test vraag 1</h1>
@@ -227,6 +227,8 @@
     ) {
       createButton();
     } else {
+      deleteButtons();
+      moveProgressBar();
       questionTextHeader.innerText =
         "Deze jumpstarters passen het best bij jouw!";
       var selectedProductsUrl =
@@ -411,5 +413,4 @@
       }
     }
   }
-  createStartButton();
 </script>
