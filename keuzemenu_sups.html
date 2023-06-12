@@ -86,9 +86,6 @@
       $("#modal-content").modal("openModal");
     });
   });
-  var modal = document.getElementById("modal-row");
-  var btn = document.getElementById("model-btn");
-  var close = document.getElementById("close");
   var questionTextHeader = document.getElementById("questionTextHeader");
   var questions = [
       [
@@ -164,12 +161,10 @@
   var questionPath = [];
   var totalWeight = 0;
 
-  function example() {
-    el = document.getElementById("example");
-    el.style.visibility =
-      el.style.visibility == "visible" ? "hidden" : "visible";
-  }
   function moveProgressBar() {
+    /**
+     * Updates the width of a progress bar element based on the progress of the questions.
+     */
     var questionsLen = questions.length;
     var total_bar = 100 / questionsLen;
     var elem = document.getElementById("myBar");
@@ -177,11 +172,17 @@
     elem.style.width = barProgression + "%";
   }
   function restartProgressBar() {
+    /**
+     * Restarts the progress bar by setting its width to the initial value and resetting the progress.
+     */
     var elem = document.getElementById("myBar");
     elem.style.width = 1 + "%";
     barProgression = 0;
   }
   function reduceProgressBar() {
+    /**
+     * Reduces the width of the progress bar based on the progress of the questions.
+     */
     var questionsLen = questions.length;
     var elem = document.getElementById("myBar");
     var total_bar = 100 / questionsLen;
@@ -207,10 +208,9 @@
     questions[currentQuestionIndex][0]["question"]["answers"].length;
     var answerOption =
     questions[currentQuestionIndex][0]["question"]["answers"];
-
-    var ids = [];
     var givenAnswer = id;
     var previousQuestion = currentQuestionIndex;
+
     questionPath.push(currentQuestionIndex);
     if(givenAnswer == "inputField"){
       givenAnswer = document.getElementById(givenAnswer).value;
@@ -227,18 +227,21 @@
       }
     }
     console.log("current question index is " + currentQuestionIndex)
-    manipulateAnswer(currentQuestionIndex);
+    manipulateAnswer(previousQuestion);
     moveProgressBar();
 
-    if (questions[previousQuestion][0]["question"]["answers"][0]["optionInfo"]["nextQuestionId"] != null) {
-      createButton();
+    if (currentQuestionIndex != null) {
+      createButton(); // Create the buttons for the next question
     } else {
-      openURL();
-      
+      openURL(); // Open the URL if there are no more questions
     }
   }
   
   function manipulateAnswer(number){
+    /**
+   * Manipulates the given answer based on the provided question number.
+   *  @param {number} number - The question number.
+   */
       number = number -1;
     if (number == 0){
       if(givenAnswers[0] == "gevorderd"){
@@ -256,7 +259,10 @@
     }
   }
 
-  function openURL(){
+  function openURL() {
+    /**
+     * Opens a URL based on the given answers, displaying the selected products.
+     */
     deleteButtons();
     questionTextHeader.innerText = "Deze sups passen het best bij jouw!";
     var selectedProductsUrl ="https://bootman.nl/sup-fun/sup-boards-opblaasbaar?price=0-" + givenAnswers[2] + "&prod_level="+ givenAnswers[0] +"&prod_loadcap_front=" + givenAnswers[1] + "-269";
@@ -265,6 +271,13 @@
   }
 
   function restartForm() {
+    /**
+     * Restats the whole choice aid
+     * by emptying givenAnswers and the questionPath
+     * Resets curretQuestionIndex and the progressbar
+     * removes explanation
+     * creates buttons
+     */
     currentQuestionIndex = 0;
     givenAnswers = [];
     questionPath = [];
@@ -275,31 +288,44 @@
   }
 
   function previousQuestion() {
-    console.log(counter);
-    if (currentQuestionIndex == 0) {
-      alert("je bent bij de eerste vraag!");
-    } else {
-      givenAnswers.pop();
-      currentQuestionIndex = questionPath.slice(-1);
-      questionPath.pop();
-      reduceProgressBar();
-      deleteButtons();
-      createButton();
+    /**
+     * Handles the transition to the previous question in the form.
+     * If already at the first question, displays an alert.
+     * Otherwise, updates the necessary elements and progress.
+     */
+      if (currentQuestionIndex == 0) {
+        alert("je bent bij de eerste vraag!");
+      } else {
+        explanationState = false;
+        document.getElementById("explanationDiv").innerHTML = "";
+        givenAnswers.pop();
+        currentQuestionIndex = questionPath.slice(-1);
+        questionPath.pop();
+        reduceProgressBar();
+        deleteButtons();
+        createButton();
+      }
     }
-  }
+  
 
   function moreInfo(id) {
-    console.log(explanationState);
-    if (explanationState == false) {
-      document.getElementById("explanationDiv").innerHTML +=
-      questions[currentQuestionIndex][0]["question"]["explanation"]
-      explanationState = true;
-    } else {
-      nextQuestion(id);
+    // checks if extra information is already showing
+    // shows extra information if it isnt showing
+      console.log(explanationState);
+      if (explanationState == false) {
+        document.getElementById("explanationDiv").innerHTML +=
+        questions[currentQuestionIndex][0]["question"]["explanation"]
+        explanationState = true;
+        var moreInfoButton = document.getElementById("MoreInfoBtn");
+        moreInfoButton.parentNode.removeChild(id);
+      } else {
+        nextQuestion(id);
+      }
     }
-  }
+  
 
   function deleteButtons() {
+    // deletes all buttons
     var ids = [];
     var elems = document.getElementsByClassName("generatedBtns");
     for (var i = 0, len = elems.length; i < len; i++) {
@@ -318,8 +344,8 @@
   }
 
   function createButton() {
+    //deletes old buttons first and creates button of next question
     deleteButtons();
-    
     questionTextHeader.innerText =
       questions[currentQuestionIndex][0]["question"]["title"];
     var totalAnswer =
@@ -352,15 +378,13 @@
       }
       else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
         "card"){
-        for(var i = 0; i < totalAnswer; i++){
-          document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+        for(var t = 0; t < totalAnswer; t++){
+          document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
         }
       }
-      if(questions[currentQuestionIndex][0]["question"]["explanation"] !=
-        ""){
-        document.getElementById("more").innerHTML += "<button class='generatedBtns' id='MoreInfo' onclick='moreInfo()'>meer info</button>";
-        
-      }
+      if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
+      moreInfo()
+    }
     }
   }
 
@@ -389,19 +413,12 @@
           "</button>";
       }else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
         "card"){
-        for(var i = 0; i < totalAnswer; i++){
-          document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+        for(var t = 0; t < totalAnswer; t++){
+          document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
         }
-      } else {
-        document.getElementById("more").innerHTML +=
-          "<button class='generatedBtns' id='button_ " +
-          i +
-          "' value='" +
-          questions[counter][i] +
-          "' onclick='moreInfo(this.id)'>" +
-          questions[counter][i] +
-          "</button>";
-      }
+      } if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
+      moreInfo()
+    }
     }
   }
   createStartButton();

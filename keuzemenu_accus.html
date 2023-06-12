@@ -23,10 +23,10 @@
   .card-container {
     padding: 2px 16px;
   }
-  .generatedBtns{
-    width:50%;
+  .generatedBtns {
+    width: 50%;
   }
-  #more{
+  #more {
     align-content: center;
   }
   img {
@@ -87,9 +87,6 @@
       $("#modal-content").modal("openModal");
     });
   });
-  var modal = document.getElementById("modal-row");
-  var btn = document.getElementById("model-btn");
-  var close = document.getElementById("close");
   var questionTextHeader = document.getElementById("questionTextHeader");
   var questions = [
     [
@@ -342,11 +339,14 @@
   var questionPath = [];
 
   function example() {
-    el = document.getElementById("example");
+    var el = document.getElementById("example");
     el.style.visibility =
       el.style.visibility == "visible" ? "hidden" : "visible";
   }
   function moveProgressBar() {
+    /**
+     * Updates the width of a progress bar element based on the progress of the questions.
+     */
     var questionsLen = questions.length;
     var total_bar = 100 / questionsLen;
     var elem = document.getElementById("myBar");
@@ -354,11 +354,17 @@
     elem.style.width = barProgression + "%";
   }
   function restartProgressBar() {
+    /**
+     * Restarts the progress bar by setting its width to the initial value and resetting the progress.
+     */
     var elem = document.getElementById("myBar");
     elem.style.width = 1 + "%";
     barProgression = 0;
   }
   function reduceProgressBar() {
+    /**
+     * Reduces the width of the progress bar based on the progress of the questions.
+     */
     var questionsLen = questions.length;
     var elem = document.getElementById("myBar");
     var total_bar = 100 / questionsLen;
@@ -366,7 +372,6 @@
     elem.style.width = barProgression + "%";
   }
   function nQf(id) {
-    var ids = [];
     var givenAnswer = document.getElementById(id).value;
     var totalAnswer =
       questions[currentQuestionIndex][0]["question"]["answers"].length;
@@ -379,7 +384,7 @@
     var previousQuestion = currentQuestionIndex;
 
     questionPath.push(previousQuestion);
-
+    moveProgressBar();
     for (var i = 0; i < totalAnswer; i++) {
       if (answerOption[i]["optionInfo"]["value"] == givenAnswer) {
         currentQuestionIndex = answerOption[i]["optionInfo"]["nextQuestionId"];
@@ -399,34 +404,26 @@
           sum += parseInt(value);
         }
       }
+      var selectedProductsUrl = "https://bootman.nl/elektra/accus?";
       let avg = sum / givenAnswers.length;
       let roundedAvg = Math.round(avg);
       if (roundedAvg == 3) {
         questionTextHeader.innerText =
           "Deze lood-accus passen het best bij jouw!";
-        var selectedProductsUrl =
-          "https://bootman.nl/elektra/accus?" +
-          "price=84.00-" +
-          givenAnswers.slice(-1) +
-          "&prod_batterytype=79709";
+        selectedProductsUrl =
+          "price=84.00-" + givenAnswers.slice(-1) + "&prod_batterytype=79709";
         window.open(selectedProductsUrl, "_self");
       } else if (roundedAvg == 2) {
         questionTextHeader.innerText =
           "Deze AGM-accus passen het best bij jouw!";
-        var selectedProductsUrl =
-          "https://bootman.nl/elektra/accus?" +
-          "price=84.00-" +
-          givenAnswers.slice(-1) +
-          "&prod_batterytype=79715";
+        selectedProductsUrl =
+          "price=84.00-" + givenAnswers.slice(-1) + "&prod_batterytype=79715";
         window.open(selectedProductsUrl, "_self");
       } else {
         questionTextHeader.innerText =
           "Deze lithium-accus passen het best bij jouw!";
-        var selectedProductsUrl =
-          "https://bootman.nl/elektra/accus?" +
-          "price=84.00-" +
-          givenAnswers.slice(-1) +
-          "&prod_batterytype=79705";
+        selectedProductsUrl =
+          "price=84.00-" + givenAnswers.slice(-1) + "&prod_batterytype=79705";
         window.open(selectedProductsUrl, "_self");
       }
     }
@@ -443,15 +440,19 @@
   }
 
   function previousQuestion() {
-    console.log(counter);
+    /**
+     * Handles the transition to the previous question in the form.
+     * If already at the first question, displays an alert.
+     * Otherwise, updates the necessary elements and progress.
+     */
     if (currentQuestionIndex == 0) {
       alert("je bent bij de eerste vraag!");
     } else {
       givenAnswers.pop();
       currentQuestionIndex = questionPath.slice(-1);
       questionPath.pop();
-      console.log(questionPath)
-      console.log(givenAnswers)
+      console.log(questionPath);
+      console.log(givenAnswers);
       reduceProgressBar();
       deleteButtons();
       createButton();
@@ -459,6 +460,8 @@
   }
 
   function moreInfo(id) {
+    // checks if extra information is already showing
+    // shows extra information if it isnt showing
     console.log(explanationState);
     if (explanationState == false) {
       document.getElementById("explanationDiv").innerHTML +=
@@ -470,6 +473,7 @@
   }
 
   function deleteButtons() {
+    // deletes all buttons
     var ids = [];
     var elems = document.getElementsByClassName("generatedBtns");
     for (var i = 0, len = elems.length; i < len; i++) {
@@ -488,9 +492,9 @@
   }
 
   function createButton() {
+    //deletes old buttons first and creates button of next question
     deleteButtons();
-    moveProgressBar();
-    console.log("qurrent questionindex?? " + currentQuestionIndex);
+
     questionTextHeader.innerText =
       questions[currentQuestionIndex][0]["question"]["title"];
     var totalAnswer =
@@ -523,6 +527,9 @@
           questions[counter][0]["question"]["answers"][i]["value"] +
           ")'></input>";
       }
+      if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
+        moreInfo();
+      }
     }
   }
 
@@ -546,15 +553,9 @@
             "title"
           ] +
           "</button>";
-      } else {
-        document.getElementById("more").innerHTML +=
-          "<button class='generatedBtns' id='button_ " +
-          i +
-          "' value='" +
-          questions[counter][i] +
-          "' onclick='moreInfo(this.id)'>" +
-          questions[counter][i] +
-          "</button>";
+      }
+      if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
+        moreInfo();
       }
     }
   }
