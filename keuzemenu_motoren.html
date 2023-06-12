@@ -99,9 +99,6 @@
       $("#modal-content").modal("openModal");
     });
   });
-  // var modal = document.getElementById("modal-row");
-  // var btn = document.getElementById("model-btn");
-  // var close = document.getElementById("close");
   var questionTextHeader = document.getElementById("questionTextHeader");
   var questions = [
     [
@@ -144,7 +141,7 @@
           ],
           explanation:
             // uitleg tabel meer pk en prijsklasse ongeveer prijs indicatie
-            "",
+            "<h4>Let op</h4><br><p>Prijzen van benzine motoren kosten tussen 805 en 3700 euro</p>",
         },
       },
     ],
@@ -217,14 +214,10 @@
   var explanationState = false;
   var currentQuestionIndex = 0;
   var questionPath = [];
-  // var totalWeight = 0;
-
-  function example() {
-    var el = document.getElementById("example");
-    el.style.visibility =
-      el.style.visibility == "visible" ? "hidden" : "visible";
-  }
   function moveProgressBar() {
+    /**
+     * Updates the width of a progress bar element based on the progress of the questions.
+     */
     var questionsLen = questions.length;
     var total_bar = 100 / questionsLen;
     var elem = document.getElementById("myBar");
@@ -232,11 +225,17 @@
     elem.style.width = barProgression + "%";
   }
   function restartProgressBar() {
+    /**
+     * Restarts the progress bar by setting its width to the initial value and resetting the progress.
+     */
     var elem = document.getElementById("myBar");
     elem.style.width = 1 + "%";
     barProgression = 0;
   }
   function reduceProgressBar() {
+    /**
+     * Reduces the width of the progress bar based on the progress of the questions.
+     */
     var questionsLen = questions.length;
     var elem = document.getElementById("myBar");
     var total_bar = 100 / questionsLen;
@@ -276,6 +275,7 @@
     var answerOption =
       questions[currentQuestionIndex][0]["question"]["answers"];
     var givenAnswer = id;
+    var previousQuestion = currentQuestionIndex;
     questionPath.push(currentQuestionIndex);
     moveProgressBar();
     if (givenAnswer == "inputField") {
@@ -283,7 +283,8 @@
       currentQuestionIndex = answerOption[0]["optionInfo"]["nextQuestionId"];
     }
     givenAnswers.push(givenAnswer);
-    manipulateAnswer(currentQuestionIndex);
+    manipulateAnswer(previousQuestion);
+    console.log(givenAnswers);
 
     for (var i = 0; i < totalAnswer; i++) {
       if (answerOption[i]["optionInfo"]["title"] == givenAnswer) {
@@ -299,39 +300,58 @@
 
   function manipulateAnswer(number) {
     if (number == 0) {
-      if (givenAnswers[0] == "elektrische boten") {
+      if (givenAnswers[0] == "elektrische motoren") {
         givenAnswers.pop();
         givenAnswers.push("elektrisch-varen");
       } else {
         givenAnswers.pop();
-        givenAnswers.push("79702");
+        givenAnswers.push("buitenboordmotoren");
       }
-    } else if (number == 1) {
-      if (givenAnswers.slice(-1) < 80){
+    } else if(number == 2) {
+      var answer = givenAnswers.slice(-1);
+      answer = +answer;
+      givenAnswers.pop()
+      if (answer <= 58){
+        givenAnswers.push("fluistermotoren?prod_thrustlb_front=" + answer.toString() + "-58")
+      }else {
+        givenAnswers.push("elektrische-buitenboordmotoren?prod_thrustlb_front=" + answer.toString() + "-820")
+      }
+    } else if(number == 3){
+      if (givenAnswers[0] == "fluistermotoren"){
         givenAnswers.pop();
-        givenAnswers.push("fluistermotoren");
+        givenAnswers.push("7758")
       } else {
         givenAnswers.pop();
-        givenAnswers.push("elektrische-buitenboordmotoren");
+        givenAnswers.push("7687")
       }
     }
   }
 
   function openURL() {
+    /**
+     * Opens a URL based on the given answers, displaying the selected products.
+     */
     deleteButtons();
     questionTextHeader.innerText = "Deze sups passen het best bij jouw!";
-    var selectedProductsUrl =
-      "https://bootman.nl/sup-fun/sup-boards-opblaasbaar?price=0-" +
-      givenAnswers[2] +
-      "&prod_level=" +
-      givenAnswers[0] +
-      "&prod_loadcap_front=" +
-      givenAnswers[1] +
-      "-269";
-    window.open(selectedProductsUrl, "_self");
+    var baseUrl = "https://bootman.nl/";
+    var selectedProductsUrl = "";
+    if (givenAnswers[0] == "elektrisch-varen"){
+      selectedProductsUrl = baseUrl + "elektrisch-varen/" + givenAnswers[1] + "&prod_watertype_front=" + givenAnswers[2] + "&price=0-" + givenAnswers[3];
+      window.open(selectedProductsUrl, "_self");
+    } else {
+      selectedProductsUrl = baseUrl + "boten-motoren/" + givenAnswers[0] + "?price=0-" + givenAnswers[1];
+      window.open(selectedProductsUrl, "_self");
+    }
   }
 
   function restartForm() {
+    /**
+     * Restats the whole choice aid
+     * by emptying givenAnswers and the questionPath
+     * Resets curretQuestionIndex and the progressbar
+     * removes explanation
+     * creates buttons
+     */
     currentQuestionIndex = 0;
     givenAnswers = [];
     questionPath = [];
@@ -342,6 +362,11 @@
   }
 
   function previousQuestion() {
+    /**
+     * Handles the transition to the previous question in the form.
+     * If already at the first question, displays an alert.
+     * Otherwise, updates the necessary elements and progress.
+     */
     if (currentQuestionIndex == 0) {
       alert("je bent bij de eerste vraag!");
     } else {
@@ -357,6 +382,8 @@
   }
 
   function moreInfo(id) {
+    // checks if extra information is already showing
+    // shows extra information if it isnt showing
     console.log(explanationState);
     if (explanationState == false) {
       document.getElementById("explanationDiv").innerHTML +=
@@ -364,12 +391,11 @@
       explanationState = true;
       var moreInfoButton = document.getElementById("MoreInfoBtn");
       moreInfoButton.parentNode.removeChild(id);
-    } else {
-      nextQuestion(id);
     }
   }
 
   function deleteButtons() {
+    // deletes all buttons
     var ids = [];
     var elems = document.getElementsByClassName("generatedBtns");
     for (var i = 0, len = elems.length; i < len; i++) {
@@ -388,8 +414,8 @@
   }
 
   function createButton() {
+    //deletes old buttons first and creates button of next question
     deleteButtons();
-
     questionTextHeader.innerText =
       questions[currentQuestionIndex][0]["question"]["title"];
     var totalAnswer =
@@ -495,8 +521,7 @@
       }
     }
     if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
-      document.getElementById("more").innerHTML +=
-        "<button class='generatedBtns' id='MoreInfoBtn' onclick='moreInfo()'>meer info</button>";
+      moreInfo()
     }
   }
   createStartButton();

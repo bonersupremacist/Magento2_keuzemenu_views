@@ -1,371 +1,415 @@
 <style>
-    #myProgress {
-      width: 100%;
-      background-color: #ddd;
-    }
-    #myBar {
-      width: 1%;
-      height: 20px;
-      background-color: #04aa6d;
-    }
-    .card {
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-      transition: 0.3s;
-      width: 40%;
-      margin: 5px;
-    }
-  
-    .card:hover {
-      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-    }
-  
-    .card-container {
-      padding: 2px 16px;
-      flex-shrink: 3;
-      margin: 5px;
-    }
-    .generatedBtns{
-      width:50%;
-    }
-    #more{
-      display: flex;
-    }
-    img {
-      width: 100%;
-      height: 60%;
-    }
-  </style>
-  <button id="modal-btn">keuzehulp</button>
-  <div id="modal-content">
-    <div class="modal-inner-content">
-      <h1 id="questionTextHeader">test vraag 1</h1>
-    </div>
-    <div id="questionAnswerDiv">
-      <div id="more"></div>
-    </div>
-    <div id="explanationDiv"></div>
-  
-    <br />
-    <div id="myProgress">
-      <div id="myBar"></div>
-    </div>
+  #myProgress {
+    width: 100%;
+    background-color: #ddd;
+  }
+  #myBar {
+    width: 1%;
+    height: 20px;
+    background-color: #04aa6d;
+  }
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    width: 40%;
+    margin: 5px;
+  }
+
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .card-container {
+    padding: 2px 16px;
+    flex-shrink: 3;
+    margin: 5px;
+  }
+  .generatedBtns {
+    width: 50%;
+  }
+  #more {
+    display: flex;
+  }
+  img {
+    width: 100%;
+    height: 60%;
+  }
+</style>
+<button id="modal-btn">keuzehulp</button>
+<div id="modal-content">
+  <div class="modal-inner-content">
+    <h1 id="questionTextHeader">test vraag 1</h1>
   </div>
-  <script>
-    require(["jquery", "Magento_Ui/js/modal/modal"], function ($, modal) {
-      var options = {
-        type: "popup",
-        responsive: true,
-        innerScroll: true,
-        title: "bootman keuzehulp",
-        buttons: [
-          {
-            text: $.mage.__("back"),
-            class: "modal-close",
-            click: function () {
-              previousQuestion();
-            },
+  <div id="questionAnswerDiv">
+    <div id="more"></div>
+  </div>
+  <div id="explanationDiv"></div>
+
+  <br />
+  <div id="myProgress">
+    <div id="myBar"></div>
+  </div>
+</div>
+<script>
+  require(["jquery", "Magento_Ui/js/modal/modal"], function ($, modal) {
+    var options = {
+      type: "popup",
+      responsive: true,
+      innerScroll: true,
+      title: "bootman keuzehulp",
+      buttons: [
+        {
+          text: $.mage.__("back"),
+          class: "modal-close",
+          click: function () {
+            previousQuestion();
           },
-          {
-            text: $.mage.__("herstart keuzehulp"),
-            class: "modal-close",
-            click: function () {
-              restartForm();
-            },
+        },
+        {
+          text: $.mage.__("herstart keuzehulp"),
+          class: "modal-close",
+          click: function () {
+            restartForm();
           },
-          {
-            text: $.mage.__("close"),
-            class: "modal-close",
-            click: function () {
-              this.closeModal();
-            },
+        },
+        {
+          text: $.mage.__("close"),
+          class: "modal-close",
+          click: function () {
+            this.closeModal();
           },
-        ],
-      };
-      modal(options, $("#modal-content"));
-      $("#modal-btn").on("click", function () {
-        $("#modal-content").modal("openModal");
-      });
+        },
+      ],
+    };
+    modal(options, $("#modal-content"));
+    $("#modal-btn").on("click", function () {
+      $("#modal-content").modal("openModal");
     });
-    var modal = document.getElementById("modal-row");
-    var btn = document.getElementById("model-btn");
-    var close = document.getElementById("close");
-    var questionTextHeader = document.getElementById("questionTextHeader");
-    var questions = [
-      [
-        {
-          question: {
-            id: 0,
-            title: "Voor welk voertuig is de lader bedoeld?",
-            questionType: "card",
-            answers: [
-              {
-                optionInfo: {
-                  title: "Auto",
-                  nextQuestionId: 1,
-                  img: "{{media url=&quot;wysiwyg/car.jpg&quot;}}"
-                },
+  });
+  var questionTextHeader = document.getElementById("questionTextHeader");
+  var questions = [
+    [
+      {
+        question: {
+          id: 0,
+          title: "Voor welk voertuig is de lader bedoeld?",
+          questionType: "card",
+          answers: [
+            {
+              optionInfo: {
+                title: "Auto",
+                nextQuestionId: 1,
+                img: "{{media url=&quot;wysiwyg/car.jpg&quot;}}",
               },
-              {
-                optionInfo: {
-                  title: "Boot",
-                  nextQuestionId: 1,
-                  img: "{{media url=&quot;wysiwyg/boat.jpg&quot;}}"
-                },
+            },
+            {
+              optionInfo: {
+                title: "Boot",
+                nextQuestionId: 1,
+                img: "{{media url=&quot;wysiwyg/boat.jpg&quot;}}",
               },
-              {
-                optionInfo: {
-                  title:
-                    "Vrachtwagen",
-                  nextQuestionId: 1,
-                  img: "{{media url=&quot;wysiwyg/truckk.jpg&quot;}}"
-                },
+            },
+            {
+              optionInfo: {
+                title: "Vrachtwagen",
+                nextQuestionId: 1,
+                img: "{{media url=&quot;wysiwyg/truckk.jpg&quot;}}",
               },
-            ],
-            explanation:
-            ""
-          },
+            },
+          ],
+          explanation: "",
         },
-      ],
-      [
-        {
-          question: {
-            id: 1,
-            title: "Hoeveel pk heeft de voertuig?",
-            questionType: "inputField",
-            answers: [
-              {
-                optionInfo: {
-                  title: "[inputField]",
-                  nextQuestionId: 2,
-                },
+      },
+    ],
+    [
+      {
+        question: {
+          id: 1,
+          title: "Hoeveel pk heeft de voertuig?",
+          questionType: "inputField",
+          answers: [
+            {
+              optionInfo: {
+                title: "[inputField]",
+                nextQuestionId: 2,
               },
-            ],
-            explanation:
-            ""
-          },
+            },
+          ],
+          explanation: "",
         },
-      ],
-      [
-        {
-          question: {
-            id: 2,
-            title: "maximale Budget?",
-            questionType: "inputField",
-            answers: [
-              {
-                optionInfo: {
-                  title: "[inputField]",
-                  nextQuestionId: null,
-                  value: 1,
-                },
+      },
+    ],
+    [
+      {
+        question: {
+          id: 2,
+          title: "maximale Budget?",
+          questionType: "inputField",
+          answers: [
+            {
+              optionInfo: {
+                title: "[inputField]",
+                nextQuestionId: null,
+                value: 1,
               },
-            ],
-            explanation:
-            ""
-          },
+            },
+          ],
+          explanation: "",
         },
-      ],
-    ];
-  
-    var givenAnswers = [];
-    var counter = 0;
-    var barProgression = 0;
-    var explanationState = false;
-    var currentQuestionIndex = 0;
-    var questionPath = [];
-  
-    function example() {
-      var el = document.getElementById("example");
-      el.style.visibility =
-      el.style.visibility == "visible" ? "hidden" : "visible";
+      },
+    ],
+  ];
+
+  var givenAnswers = [];
+  var counter = 0;
+  var barProgression = 0;
+  var explanationState = false;
+  var currentQuestionIndex = 0;
+  var questionPath = [];
+
+  function moveProgressBar() {
+    /**
+     * Updates the width of a progress bar element based on the progress of the questions.
+     */
+    var questionsLen = questions.length;
+    var total_bar = 100 / questionsLen;
+    var elem = document.getElementById("myBar");
+    barProgression = barProgression + total_bar;
+    elem.style.width = barProgression + "%";
+  }
+  function restartProgressBar() {
+    /**
+     * Restarts the progress bar by setting its width to the initial value and resetting the progress.
+     */
+    var elem = document.getElementById("myBar");
+    elem.style.width = 1 + "%";
+    barProgression = 0;
+  }
+  function reduceProgressBar() {
+    /**
+     * Reduces the width of the progress bar based on the progress of the questions.
+     */
+    var questionsLen = questions.length;
+    var elem = document.getElementById("myBar");
+    var total_bar = 100 / questionsLen;
+    barProgression = barProgression - total_bar;
+    elem.style.width = barProgression + "%";
+  }
+  function nextQuestion(id) {
+    explanationState = false;
+    document.getElementById("explanationDiv").innerHTML = "";
+    var totalAnswer =
+      questions[currentQuestionIndex][0]["question"]["answers"].length;
+    var answerOption =
+      questions[currentQuestionIndex][0]["question"]["answers"];
+    var givenAnswer = id;
+    var previousQuestion = currentQuestionIndex;
+    questionPath.push(currentQuestionIndex);
+
+    moveProgressBar();
+    if (givenAnswer == "inputField") {
+      givenAnswer = document.getElementById(givenAnswer).value;
+      currentQuestionIndex = answerOption[0]["optionInfo"]["nextQuestionId"];
     }
-    function moveProgressBar() {
-      var questionsLen = questions.length;
-      var total_bar = 100 / questionsLen;
-      var elem = document.getElementById("myBar");
-      barProgression = barProgression + total_bar;
-      elem.style.width = barProgression + "%";
+    givenAnswers.push(givenAnswer);
+    console.log(givenAnswers);
+
+    for (var i = 0; i < totalAnswer; i++) {
+      if (answerOption[i]["optionInfo"]["title"] == givenAnswer) {
+        currentQuestionIndex = answerOption[i]["optionInfo"]["nextQuestionId"];
+      }
     }
-    function restartProgressBar() {
-      var elem = document.getElementById("myBar");
-      elem.style.width = 1 + "%";
-      barProgression = 0;
+
+    if (
+      questions[previousQuestion][0]["question"]["answers"][0]["optionInfo"][
+        "nextQuestionId"
+      ] != null
+    ) {
+      createButton();
+    } else {
+      questionTextHeader.innerText =
+        "Deze jumpstarters passen het best bij jouw!";
+      var selectedProductsUrl =
+        "https://bootman.nl/elektra/jumpstarters/" +
+        givenAnswers[0] +
+        "?" +
+        "price=84.00-" +
+        givenAnswers.slice(-1);
+      window.open(selectedProductsUrl, "_self");
     }
-    function reduceProgressBar() {
-      var questionsLen = questions.length;
-      var elem = document.getElementById("myBar");
-      var total_bar = 100 / questionsLen;
-      barProgression = barProgression - total_bar;
-      elem.style.width = barProgression + "%";
-    }
-    function nextQuestion(id) {
+  }
+
+  function restartForm() {
+    /**
+     * Restats the whole choice aid
+     * by emptying givenAnswers and the questionPath
+     * Resets curretQuestionIndex and the progressbar
+     * removes explanation
+     * creates buttons
+     */
+    currentQuestionIndex = 0;
+    givenAnswers = [];
+    questionPath = [];
+    restartProgressBar();
+    document.getElementById("explanationDiv").innerHTML = "";
+    document.getElementById("more").innerHTML = "";
+    createStartButton();
+  }
+
+  function previousQuestion() {
+    /**
+     * Handles the transition to the previous question in the form.
+     * If already at the first question, displays an alert.
+     * Otherwise, updates the necessary elements and progress.
+     */
+    if (currentQuestionIndex == 0) {
+      alert("je bent bij de eerste vraag!");
+    } else {
       explanationState = false;
       document.getElementById("explanationDiv").innerHTML = "";
-      var totalAnswer =
-      questions[currentQuestionIndex][0]["question"]["answers"].length;
-      var answerOption =
-      questions[currentQuestionIndex][0]["question"]["answers"];
-
-      var ids = [];
-      var givenAnswer = id;
-      var previousQuestion = currentQuestionIndex;
-      questionPath.push(currentQuestionIndex);
-      
-      moveProgressBar();
-      if(givenAnswer == "inputField"){
-        givenAnswer = document.getElementById(givenAnswer).value;
-        currentQuestionIndex = answerOption[0]["optionInfo"]["nextQuestionId"];
-      }
-      givenAnswers.push(givenAnswer);
-      console.log(givenAnswers);
-
-      for (var i = 0; i < totalAnswer; i++) {
-        if (answerOption[i]["optionInfo"]["title"] == givenAnswer) {
-          currentQuestionIndex = answerOption[i]["optionInfo"]["nextQuestionId"];
-        }
-      }
-
-      if (questions[previousQuestion][0]["question"]["answers"][0]["optionInfo"]["nextQuestionId"] != null) {
-        createButton();
-      } else {
-          questionTextHeader.innerText = "Deze jumpstarters passen het best bij jouw!";
-          var selectedProductsUrl ="https://bootman.nl/elektra/jumpstarters/" + givenAnswers[0] + "?" + "price=84.00-" + givenAnswers.slice(-1);
-          window.open(selectedProductsUrl, "_self");
-        
-      }
-    }
-  
-    function restartForm() {
-      currentQuestionIndex = 0;
-      givenAnswers = [];
-      questionPath = [];
-      restartProgressBar();
-      document.getElementById("explanationDiv").innerHTML = "";
-      document.getElementById("more").innerHTML = "";
-      createStartButton();
-    }
-  
-    function previousQuestion() {
-      console.log(counter);
-      if (currentQuestionIndex == 0) {
-        alert("je bent bij de eerste vraag!");
-      } else {
-        explanationState = false;
-        document.getElementById("explanationDiv").innerHTML = "";
-        givenAnswers.pop();
-        currentQuestionIndex = questionPath.slice(-1);
-        questionPath.pop();
-        reduceProgressBar();
-        deleteButtons();
-        createButton();
-      }
-    }
-  
-    function moreInfo(id) {
-      console.log(explanationState);
-      if (explanationState == false) {
-        document.getElementById("explanationDiv").innerHTML +=
-          questions[counter][0]["question"]["explanation"];
-        explanationState = true;
-      } else {
-        nextQuestion(id);
-      }
-    }
-  
-    function deleteButtons() {
-      var ids = [];
-      var elems = document.getElementsByClassName("generatedBtns");
-      for (var i = 0, len = elems.length; i < len; i++) {
-        ids.push(elems[i].id);
-      }
-  
-      if (ids[0] == "selectOptions") {
-        var id = document.getElementById(ids[0]);
-        id.parentNode.removeChild(id);
-      } else {
-        for (var p = 0; p < ids.length; p++) {
-          var id = document.getElementById(ids[p]);
-          id.parentNode.removeChild(id);
-        }
-      }
-    }
-  
-    function createButton() {
+      givenAnswers.pop();
+      currentQuestionIndex = questionPath.slice(-1);
+      questionPath.pop();
+      reduceProgressBar();
       deleteButtons();
-      questionTextHeader.innerText =
-        questions[currentQuestionIndex][0]["question"]["title"];
-      var totalAnswer =
-        questions[currentQuestionIndex][0]["question"]["answers"].length;
-      for (var i = 0; i < totalAnswer; i++) {
-        if (
-          questions[currentQuestionIndex][0]["question"]["questionType"] ==
-          "standard"
-        ) {
+      createButton();
+    }
+  }
+
+  function moreInfo(id) {
+    // checks if extra information is already showing
+    // shows extra information if it isnt showing
+    console.log(explanationState);
+    if (explanationState == false) {
+      document.getElementById("explanationDiv").innerHTML +=
+        questions[currentQuestionIndex][0]["question"]["explanation"];
+      explanationState = true;
+      var moreInfoButton = document.getElementById("MoreInfoBtn");
+      moreInfoButton.parentNode.removeChild(id);
+    }
+  }
+
+  function deleteButtons() {
+    // deletes all buttons
+    var ids = [];
+    var elems = document.getElementsByClassName("generatedBtns");
+    for (var i = 0, len = elems.length; i < len; i++) {
+      ids.push(elems[i].id);
+    }
+
+    if (ids[0] == "selectOptions") {
+      var id = document.getElementById(ids[0]);
+      id.parentNode.removeChild(id);
+    } else {
+      for (var p = 0; p < ids.length; p++) {
+        var id = document.getElementById(ids[p]);
+        id.parentNode.removeChild(id);
+      }
+    }
+  }
+
+  function createButton() {
+    //deletes old buttons first and creates button of next question
+    deleteButtons();
+    questionTextHeader.innerText =
+      questions[currentQuestionIndex][0]["question"]["title"];
+    var totalAnswer =
+      questions[currentQuestionIndex][0]["question"]["answers"].length;
+    for (var i = 0; i < totalAnswer; i++) {
+      if (
+        questions[currentQuestionIndex][0]["question"]["questionType"] ==
+        "standard"
+      ) {
+        document.getElementById("more").innerHTML +=
+          "<button class='generatedBtns' id='button_" +
+          i +
+          "' value='" +
+          questions[currentQuestionIndex][0]["question"]["answers"][i][
+            "optionInfo"
+          ]["value"] +
+          "' onclick='nextQuestion(this.id)'>" +
+          questions[currentQuestionIndex][0]["question"]["answers"][i][
+            "optionInfo"
+          ]["title"] +
+          "</button>";
+      } else if (
+        questions[currentQuestionIndex][0]["question"]["questionType"] ==
+        "inputField"
+      ) {
+        document.getElementById("more").innerHTML +=
+          "<input class='generatedBtns' id='inputField'></input><input class='generatedBtns' type='submit' value='submit' id='budgetSubmitBtn' onclick='nextQuestion(\"inputField\")'></input>";
+      } else if (
+        questions[currentQuestionIndex][0]["question"]["questionType"] == "card"
+      ) {
+        for (var t = 0; t < totalAnswer; t++) {
           document.getElementById("more").innerHTML +=
-            "<button class='generatedBtns' id='button_" +
-            i +
-            "' value='" +
-            questions[currentQuestionIndex][0]["question"]["answers"][i][
-              "optionInfo"
-            ]["value"] +
-            "' onclick='nextQuestion(this.id)'>" +
-            questions[currentQuestionIndex][0]["question"]["answers"][i][
+            "<div class='generatedBtns card' id=" +
+            questions[currentQuestionIndex][0]["question"]["answers"][t][
               "optionInfo"
             ]["title"] +
-            "</button>";
-        } else if (
-          questions[currentQuestionIndex][0]["question"]["questionType"] ==
-          "inputField"
-        ) {
-          document.getElementById("more").innerHTML +=
-            "<input class='generatedBtns' id='inputField'></input><input class='generatedBtns' type='submit' value='submit' id='budgetSubmitBtn' onclick='nextQuestion(\"inputField\")'></input>";
-        }
-        else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
-          "card"){
-          for(var t = 0; t < totalAnswer; t++){
-            document.getElementById("more").innerHTML += "<div class='generatedBtns card' id="+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"] +" onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
-          }
+            " onclick='nextQuestion(this.id)'><img src='" +
+            questions[currentQuestionIndex][0]["question"]["answers"][t][
+              "optionInfo"
+            ]["img"] +
+            "' alt=''/><div class='card-container'><h2>" +
+            questions[currentQuestionIndex][0]["question"]["answers"][t][
+              "optionInfo"
+            ]["title"] +
+            "</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
         }
       }
-    }
-  
-    function createStartButton() {
-      questionTextHeader.innerText = questions[currentQuestionIndex][0]["question"]["title"];
-      var totalAnswer = questions[currentQuestionIndex][0]["question"]["answers"].length;
-      for (var i = 0; i < totalAnswer; i++) {
-        if (
-          questions[currentQuestionIndex][0]["question"]["answers"][i]["title"] ==
-          "standard"
-        ) {
-          document.getElementById("more").innerHTML +=
-            "<button class='generatedBtns' id='button_" +
-            i +
-            "' value='" +
-            questions[counter][0]["question"]["answers"][i]["optionInfo"][
-              "title"
-            ] +
-            "' onclick='nextQuestion(this.id)'>" +
-            questions[counter][0]["question"]["answers"][i]["optionInfo"][
-              "title"
-            ] +
-            "</button>";
-        }else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
-          "card"){
-          for(var t = 0; t < totalAnswer; t++){
-            document.getElementById("more").innerHTML += "<div class='generatedBtns card' id="+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"] +" onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
-          }
-        } else {
-          document.getElementById("more").innerHTML +=
-            "<button class='generatedBtns' id='button_ " +
-            i +
-            "' value='" +
-            questions[counter][i] +
-            "' onclick='moreInfo(this.id)'>" +
-            questions[counter][i] +
-            "</button>";
-        }
+      if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
+        moreInfo();
       }
     }
-    createStartButton();
-  </script>
-  
+  }
+
+  function createStartButton() {
+    questionTextHeader.innerText =
+      questions[currentQuestionIndex][0]["question"]["title"];
+    var totalAnswer =
+      questions[currentQuestionIndex][0]["question"]["answers"].length;
+    for (var i = 0; i < totalAnswer; i++) {
+      if (
+        questions[currentQuestionIndex][0]["question"]["answers"][i]["title"] ==
+        "standard"
+      ) {
+        document.getElementById("more").innerHTML +=
+          "<button class='generatedBtns' id='button_" +
+          i +
+          "' value='" +
+          questions[counter][0]["question"]["answers"][i]["optionInfo"][
+            "title"
+          ] +
+          "' onclick='nextQuestion(this.id)'>" +
+          questions[counter][0]["question"]["answers"][i]["optionInfo"][
+            "title"
+          ] +
+          "</button>";
+      } else if (
+        questions[currentQuestionIndex][0]["question"]["questionType"] == "card"
+      ) {
+        for (var t = 0; t < totalAnswer; t++) {
+          document.getElementById("more").innerHTML +=
+            "<div class='generatedBtns card' id=" +
+            questions[currentQuestionIndex][0]["question"]["answers"][t][
+              "optionInfo"
+            ]["title"] +
+            " onclick='nextQuestion(this.id)'><img src='" +
+            questions[currentQuestionIndex][0]["question"]["answers"][t][
+              "optionInfo"
+            ]["img"] +
+            "' alt=''/><div class='card-container'><h2>" +
+            questions[currentQuestionIndex][0]["question"]["answers"][t][
+              "optionInfo"
+            ]["title"] +
+            "</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+        }
+      }
+      if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
+        moreInfo();
+      }
+    }
+  }
+  createStartButton();
+</script>

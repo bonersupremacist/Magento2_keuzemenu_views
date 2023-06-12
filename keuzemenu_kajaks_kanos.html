@@ -86,9 +86,6 @@
       $("#modal-content").modal("openModal");
     });
   });
-  var modal = document.getElementById("modal-row");
-  var btn = document.getElementById("model-btn");
-  var close = document.getElementById("close");
   var questionTextHeader = document.getElementById("questionTextHeader");
   var questions = [
     [
@@ -194,12 +191,11 @@
   var currentQuestionIndex = 0;
   var questionPath = [];
 
-  function example() {
-    var el = document.getElementById("example");
-    el.style.visibility =
-      el.style.visibility == "visible" ? "hidden" : "visible";
-  }
+  
   function moveProgressBar() {
+    /**
+     * Updates the width of a progress bar element based on the progress of the questions.
+     */
     var questionsLen = questions.length;
     var total_bar = 100 / questionsLen;
     var elem = document.getElementById("myBar");
@@ -207,11 +203,17 @@
     elem.style.width = barProgression + "%";
   }
   function restartProgressBar() {
+    /**
+     * Restarts the progress bar by setting its width to the initial value and resetting the progress.
+     */
     var elem = document.getElementById("myBar");
     elem.style.width = 1 + "%";
     barProgression = 0;
   }
   function reduceProgressBar() {
+    /**
+     * Reduces the width of the progress bar based on the progress of the questions.
+     */
     var questionsLen = questions.length;
     var elem = document.getElementById("myBar");
     var total_bar = 100 / questionsLen;
@@ -245,13 +247,18 @@
     }
 
     if (currentQuestionIndex != null) {
-      createButton();
+      createButton(); // Create the buttons for the next question
     } else {
-      openURL();
+      openURL(); // Open the URL if there are no more questions
     }
   }
 
+  
   function manipulateAnswer(number) {
+    /**
+   * Manipulates the given answer based on the provided question number.
+   *  @param {number} number - The question number.
+   */
     if (number == 0) {
       if (givenAnswers.slice(-1) == "Kano") {
         givenAnswers.pop();
@@ -280,9 +287,14 @@
   }
 
   function openURL() {
+    /**
+     * Opens a URL based on the given answers, displaying the selected products.
+     */
+    deleteButtons();
     questionTextHeader.innerText = "Deze producten passen het best bij jouw!";
+    var selectedProductsUrl = "";
     if (givenAnswers[0] == "opblaasbare-kajaks") {
-      var selectedProductsUrl =
+      selectedProductsUrl =
         "https://bootman.nl/kajaks-kanos/" +
         givenAnswers[0] +
         "?prod_level=" +
@@ -293,7 +305,7 @@
         givenAnswers.slice(-1);
       window.open(selectedProductsUrl, "_self");
     } else {
-      var selectedProductsUrl =
+      selectedProductsUrl =
         "https://bootman.nl/kajaks-kanos/" +
         givenAnswers[0] +
         "?prod_level=" +
@@ -307,6 +319,13 @@
   }
 
   function restartForm() {
+    /**
+     * Restats the whole choice aid
+     * by emptying givenAnswers and the questionPath
+     * Resets curretQuestionIndex and the progressbar
+     * removes explanation
+     * creates buttons
+     */
     currentQuestionIndex = 0;
     givenAnswers = [];
     questionPath = [];
@@ -317,6 +336,11 @@
   }
 
   function previousQuestion() {
+    /**
+     * Handles the transition to the previous question in the form.
+     * If already at the first question, displays an alert.
+     * Otherwise, updates the necessary elements and progress.
+     */
     if (currentQuestionIndex == 0) {
       alert("je bent bij de eerste vraag!");
     } else {
@@ -332,19 +356,20 @@
   }
 
   function moreInfo(id) {
+    // checks if extra information is already showing
+    // shows extra information if it isnt showing
     console.log(explanationState);
     if (explanationState == false) {
       document.getElementById("explanationDiv").innerHTML +=
         questions[currentQuestionIndex][0]["question"]["explanation"];
       explanationState = true;
-      var id = document.getElementById("MoreInfoBtn");
-      id.parentNode.removeChild(id);
-    } else {
-      nextQuestion(id);
+      var moreInfoButton = document.getElementById("MoreInfoBtn");
+      moreInfoButton.parentNode.removeChild(id);
     }
   }
 
   function deleteButtons() {
+    // deletes all buttons
     var ids = [];
     var elems = document.getElementsByClassName("generatedBtns");
     for (var i = 0, len = elems.length; i < len; i++) {
@@ -363,8 +388,8 @@
   }
 
   function createButton() {
+    //deletes old buttons first and creates button of next question
     deleteButtons();
-
     questionTextHeader.innerText =
       questions[currentQuestionIndex][0]["question"]["title"];
     var totalAnswer =
@@ -416,8 +441,7 @@
       }
     }
     if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
-      document.getElementById("more").innerHTML +=
-        "<button class='generatedBtns' id='MoreInfoBtn' onclick='moreInfo()'>meer info</button>";
+      moreInfo()
     }
   }
 
@@ -471,8 +495,7 @@
       }
     }
     if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
-      document.getElementById("more").innerHTML +=
-        "<button class='generatedBtns' id='MoreInfoBtn' onclick='moreInfo()'>meer info</button>";
+      moreInfo()
     }
   }
   createStartButton();

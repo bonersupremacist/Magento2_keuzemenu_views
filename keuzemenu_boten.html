@@ -86,9 +86,6 @@
       $("#modal-content").modal("openModal");
     });
   });
-  var modal = document.getElementById("modal-row");
-  var btn = document.getElementById("model-btn");
-  var close = document.getElementById("close");
   var questionTextHeader = document.getElementById("questionTextHeader");
   var questions = [
     [
@@ -212,12 +209,10 @@
   var currentQuestionIndex = 0;
   var questionPath = [];
 
-  function example() {
-    var el = document.getElementById("example");
-    el.style.visibility =
-    el.style.visibility == "visible" ? "hidden" : "visible";
-  }
   function moveProgressBar() {
+    /**
+     * Updates the width of a progress bar element based on the progress of the questions.
+     */
     var questionsLen = questions.length;
     var total_bar = 100 / questionsLen;
     var elem = document.getElementById("myBar");
@@ -225,11 +220,17 @@
     elem.style.width = barProgression + "%";
   }
   function restartProgressBar() {
+    /**
+     * Restarts the progress bar by setting its width to the initial value and resetting the progress.
+     */
     var elem = document.getElementById("myBar");
     elem.style.width = 1 + "%";
     barProgression = 0;
   }
   function reduceProgressBar() {
+    /**
+     * Reduces the width of the progress bar based on the progress of the questions.
+     */
     var questionsLen = questions.length;
     var elem = document.getElementById("myBar");
     var total_bar = 100 / questionsLen;
@@ -282,6 +283,10 @@
   }
   
   function manipulateAnswer(number){
+    /**
+   * Manipulates the given answer based on the provided question number.
+   *  @param {number} number - The question number.
+   */
     if(number == 2){
       if(givenAnswers[-1] == "Vissen"){
         givenAnswers.pop()
@@ -299,6 +304,9 @@
   }
 
   function openURL(){
+    /**
+     * Opens a URL based on the given answers, displaying the selected products.
+     */
     var weight = 0;
     var baseUrl = "https://bootman.nl/boten-motoren/boten/rubberboten?price=0-" ;
     var selectedProductsUrl = "";
@@ -326,6 +334,13 @@
   }
 
   function restartForm() {
+    /**
+     * Restats the whole choice aid
+     * by emptying givenAnswers and the questionPath
+     * Resets curretQuestionIndex and the progressbar
+     * removes explanation
+     * creates buttons
+     */
     currentQuestionIndex = 0;
     givenAnswers = [];
     questionPath = [];
@@ -336,6 +351,11 @@
   }
 
   function previousQuestion() {
+    /**
+     * Handles the transition to the previous question in the form.
+     * If already at the first question, displays an alert.
+     * Otherwise, updates the necessary elements and progress.
+     */
     if (currentQuestionIndex == 0) {
       alert("je bent bij de eerste vraag!");
     } else {
@@ -351,6 +371,8 @@
   }
 
   function moreInfo(id) {
+    // checks if extra information is already showing
+    // shows extra information if it isnt showing
       console.log(explanationState);
       if (explanationState == false) {
         document.getElementById("explanationDiv").innerHTML +=
@@ -364,6 +386,7 @@
     }
 
   function deleteButtons() {
+    // deletes all buttons
     var ids = [];
     var elems = document.getElementsByClassName("generatedBtns");
     for (var i = 0, len = elems.length; i < len; i++) {
@@ -382,6 +405,7 @@
   }
 
   function createButton() {
+    //deletes old buttons first and creates button of next question
     deleteButtons();
     questionTextHeader.innerText =
       questions[currentQuestionIndex][0]["question"]["title"];
