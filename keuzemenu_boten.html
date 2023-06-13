@@ -24,10 +24,10 @@
     flex-shrink: 3;
     margin: 5px;
   }
-  .generatedBtns{
-    width:50%;
+  .generatedBtns {
+    width: 50%;
   }
-  #more{
+  #more {
     display: flex;
   }
   img {
@@ -35,7 +35,7 @@
     height: 60%;
   }
 </style>
-<button id="modal-btn">keuzehulp</button>
+<button id="modal-btn" onclick="createStartButton()">keuzehulp</button>
 <div id="modal-content">
   <div class="modal-inner-content">
     <h1 id="questionTextHeader">test vraag 1</h1>
@@ -99,35 +99,32 @@
               optionInfo: {
                 title: "Rubberboot",
                 nextQuestionId: 1,
-                img: "{{media url=&quot;wysiwyg/car.jpg&quot;}}"
+                img: "{{media url=&quot;wysiwyg/car.jpg&quot;}}",
               },
             },
             {
               optionInfo: {
                 title: "Opblaasboot",
                 nextQuestionId: 1,
-                img: "{{media url=&quot;wysiwyg/boat.jpg&quot;}}"
+                img: "{{media url=&quot;wysiwyg/boat.jpg&quot;}}",
               },
             },
             {
               optionInfo: {
-                title:
-                  "Karperboot",
+                title: "Karperboot",
                 nextQuestionId: 1,
-                img: "{{media url=&quot;wysiwyg/truckk.jpg&quot;}}"
+                img: "{{media url=&quot;wysiwyg/truckk.jpg&quot;}}",
               },
             },
             {
               optionInfo: {
-                title:
-                  "geen idee",
+                title: "geen idee",
                 nextQuestionId: 2,
-                img: ""
+                img: "",
               },
             },
           ],
-          explanation:
-          ""
+          explanation: "",
         },
       },
     ],
@@ -146,7 +143,7 @@
             },
           ],
           explanation:
-          "<h3>rekenhulp</h3><br><p>Vul voor hoeveel volwassenen en kinderen (tot 14 jaar) de boot bedoeld is?</P><form><label for= \"getal1\"> volwassenen:</label><input type=\"number\" id=\"getal1\"><br><label for=\"getal2\">kinderen</label><input type=\"number\" id=\"getal2\"><br><input type=\"button\" value=\"Bereken\"onclick=\"calculate()\"><br><label for=\"resultaat\">gewicht:</label><input type=\"number\" id=\"resultaat\" readonly></form>"
+            '<h3>rekenhulp</h3><br><p>Vul voor hoeveel volwassenen en kinderen (tot 14 jaar) de boot bedoeld is?</P><form><label for= "getal1"> volwassenen:</label><input type="number" id="getal1"><br><label for="getal2">kinderen</label><input type="number" id="getal2"><br><input type="button" value="Bereken"onclick="calculate()"><br><label for="resultaat">gewicht:</label><input type="number" id="resultaat" readonly></form>',
         },
       },
     ],
@@ -176,8 +173,7 @@
               },
             },
           ],
-          explanation:
-          ""
+          explanation: "",
         },
       },
     ],
@@ -195,8 +191,7 @@
               },
             },
           ],
-          explanation:
-          ""
+          explanation: "",
         },
       },
     ],
@@ -238,28 +233,28 @@
     elem.style.width = barProgression + "%";
   }
 
-  function calculate(){
-    var getal1 = parseFloat(document.getElementById('getal1').value);
-		var getal2 = parseFloat(document.getElementById('getal2').value);
+  function calculate() {
+    var getal1 = parseFloat(document.getElementById("getal1").value);
+    var getal2 = parseFloat(document.getElementById("getal2").value);
 
-			// Bereken de som van de twee getallen
-			var som = (getal1 * 75) + (getal2 * 45);
+    // Bereken de som van de twee getallen
+    var som = getal1 * 75 + getal2 * 45;
 
-			// Zet het resultaat in het resultaatveld
-			document.getElementById('resultaat').value = som;
+    // Zet het resultaat in het resultaatveld
+    document.getElementById("resultaat").value = som;
   }
 
   function nextQuestion(id) {
     explanationState = false;
     document.getElementById("explanationDiv").innerHTML = "";
     var totalAnswer =
-    questions[currentQuestionIndex][0]["question"]["answers"].length;
+      questions[currentQuestionIndex][0]["question"]["answers"].length;
     var answerOption =
-    questions[currentQuestionIndex][0]["question"]["answers"];
+      questions[currentQuestionIndex][0]["question"]["answers"];
     var givenAnswer = id;
     var previousQuestion = currentQuestionIndex;
     questionPath.push(currentQuestionIndex);
-    if(givenAnswer == "inputField"){
+    if (givenAnswer == "inputField") {
       givenAnswer = document.getElementById(givenAnswer).value;
       currentQuestionIndex = answerOption[0]["optionInfo"]["nextQuestionId"];
     }
@@ -273,64 +268,70 @@
     }
     manipulateAnswer(previousQuestion);
     moveProgressBar();
-    if (questions[previousQuestion][0]["question"]["answers"][0]["optionInfo"]["nextQuestionId"] != null) {
+    if (
+      questions[previousQuestion][0]["question"]["answers"][0]["optionInfo"][
+        "nextQuestionId"
+      ] != null
+    ) {
       createButton();
     } else {
-
+      deleteButtons();
+      moveProgressBar();
       openURL();
-      
     }
   }
-  
-  function manipulateAnswer(number){
+
+  function manipulateAnswer(number) {
     /**
-   * Manipulates the given answer based on the provided question number.
-   *  @param {number} number - The question number.
-   */
-    if(number == 2){
-      if(givenAnswers[-1] == "Vissen"){
-        givenAnswers.pop()
-        givenAnswers.push("Karperboot")
-      }
-      else if(givenAnswers[-1] == "Ontspanning"){
-        givenAnswers.pop()
-        givenAnswers.push("Rubberboot")
-      }
-      else{
-        givenAnswers.pop()
-        givenAnswers.push("Opblaasboot")
+     * Manipulates the given answer based on the provided question number.
+     *  @param {number} number - The question number.
+     */
+    if (number == 2) {
+      if (givenAnswers[-1] == "Vissen") {
+        givenAnswers.pop();
+        givenAnswers.push("Karperboot");
+      } else if (givenAnswers[-1] == "Ontspanning") {
+        givenAnswers.pop();
+        givenAnswers.push("Rubberboot");
+      } else {
+        givenAnswers.pop();
+        givenAnswers.push("Opblaasboot");
       }
     }
   }
 
-  function openURL(){
+  function openURL() {
     /**
      * Opens a URL based on the given answers, displaying the selected products.
      */
     var weight = 0;
-    var baseUrl = "https://bootman.nl/boten-motoren/boten/rubberboten?price=0-" ;
+    var baseUrl = "https://bootman.nl/boten-motoren/boten/rubberboten?price=0-";
     var selectedProductsUrl = "";
-    if(givenAnswers[0] == "geen idee"){
+    if (givenAnswers[0] == "geen idee") {
       givenAnswers.shift();
     }
 
-    weight = parseInt(givenAnswers[1])
+    weight = parseInt(givenAnswers[1]);
 
-    if (givenAnswers[0] == "Rubberboot"){
-      questionTextHeader.innerText = "Deze rubberboten passen het best bij jouw!";
-      selectedProductsUrl = baseUrl + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
+    if (givenAnswers[0] == "Rubberboot") {
+      questionTextHeader.innerText =
+        "Deze rubberboten passen het best bij jouw!";
+      selectedProductsUrl =
+        baseUrl + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
       window.open(selectedProductsUrl, "_self");
-    } 
-    else if (givenAnswers[0] == "Opblaasboot"){
-      questionTextHeader.innerText = "Deze opblaasboten passen het best bij jouw!";
-      selectedProductsUrl = baseUrl + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
+    } else if (givenAnswers[0] == "Opblaasboot") {
+      questionTextHeader.innerText =
+        "Deze opblaasboten passen het best bij jouw!";
+      selectedProductsUrl =
+        baseUrl + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
       window.open(selectedProductsUrl, "_self");
-    } else if (givenAnswers[0] == "Karperboot"){
-      questionTextHeader.innerText = "Deze karperboten passen het best bij jouw!";
-      selectedProductsUrl = baseUrl + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
+    } else if (givenAnswers[0] == "Karperboot") {
+      questionTextHeader.innerText =
+        "Deze karperboten passen het best bij jouw!";
+      selectedProductsUrl =
+        baseUrl + givenAnswers[2] + "&prod_loadcap_front=" + weight + "-1300";
       window.open(selectedProductsUrl, "_self");
     }
-    
   }
 
   function restartForm() {
@@ -362,28 +363,30 @@
       givenAnswers.pop();
       questionPath.pop();
       currentQuestionIndex = questionPath.slice(-1);
-      console.log(questionPath)
-      console.log(givenAnswers)
+      console.log(questionPath);
+      console.log(givenAnswers);
       reduceProgressBar();
       deleteButtons();
       createButton();
+      explanationState = false;
+      document.getElementById("explanationDiv").innerHTML = "";
     }
   }
 
   function moreInfo(id) {
     // checks if extra information is already showing
     // shows extra information if it isnt showing
-      console.log(explanationState);
-      if (explanationState == false) {
-        document.getElementById("explanationDiv").innerHTML +=
-        questions[currentQuestionIndex][0]["question"]["explanation"]
-        explanationState = true;
-        var moreInfoButton = document.getElementById("MoreInfoBtn");
-        moreInfoButton.parentNode.removeChild(id);
-      } else {
-        nextQuestion(id);
-      }
+    console.log(explanationState);
+    if (explanationState == false) {
+      document.getElementById("explanationDiv").innerHTML +=
+        questions[currentQuestionIndex][0]["question"]["explanation"];
+      explanationState = true;
+      var moreInfoButton = document.getElementById("MoreInfoBtn");
+      moreInfoButton.parentNode.removeChild(id);
+    } else {
+      nextQuestion(id);
     }
+  }
 
   function deleteButtons() {
     // deletes all buttons
@@ -418,9 +421,9 @@
       ) {
         document.getElementById("more").innerHTML +=
           "<button class='generatedBtns' id='" +
-          questions[currentQuestionIndex][0]["question"]["answers"][i]["optionInfo"][
-            "title"
-          ] +
+          questions[currentQuestionIndex][0]["question"]["answers"][i][
+            "optionInfo"
+          ]["title"] +
           "' value='" +
           questions[currentQuestionIndex][0]["question"]["answers"][i][
             "optionInfo"
@@ -436,24 +439,37 @@
       ) {
         document.getElementById("more").innerHTML +=
           "<input class='generatedBtns' id='inputField'></input><input class='generatedBtns' type='submit' value='submit' id='budgetSubmitBtn' onclick='nextQuestion(\"inputField\")'></input>";
-      }
-      else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
-        "card"){
-        for(var p = 0; p < totalAnswer; p++){
-          document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][p]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][p]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][p]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
+      } else if (
+        questions[currentQuestionIndex][0]["question"]["questionType"] == "card"
+      ) {
+        for (var p = 0; p < totalAnswer; p++) {
+          document.getElementById("more").innerHTML +=
+            "<div class='generatedBtns card' id='" +
+            questions[currentQuestionIndex][0]["question"]["answers"][p][
+              "optionInfo"
+            ]["title"] +
+            "' onclick='nextQuestion(this.id)'><img src='" +
+            questions[currentQuestionIndex][0]["question"]["answers"][p][
+              "optionInfo"
+            ]["img"] +
+            "' alt=''/><div class='card-container'><h2>" +
+            questions[currentQuestionIndex][0]["question"]["answers"][p][
+              "optionInfo"
+            ]["title"] +
+            "</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
         }
       }
-      if(questions[currentQuestionIndex][0]["question"]["explanation"] !=
-        ""){
-        document.getElementById("more").innerHTML += "<button class='generatedBtns' id='MoreInfo' onclick='moreInfo()'>meer info</button>";
-        
+      if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
+        moreInfo();
       }
     }
   }
 
   function createStartButton() {
-    questionTextHeader.innerText = questions[currentQuestionIndex][0]["question"]["title"];
-    var totalAnswer = questions[currentQuestionIndex][0]["question"]["answers"].length;
+    questionTextHeader.innerText =
+      questions[currentQuestionIndex][0]["question"]["title"];
+    var totalAnswer =
+      questions[currentQuestionIndex][0]["question"]["answers"].length;
     for (var i = 0; i < totalAnswer; i++) {
       if (
         questions[currentQuestionIndex][0]["question"]["answers"][i]["title"] ==
@@ -473,24 +489,27 @@
             "title"
           ] +
           "</button>";
-      }else if(questions[currentQuestionIndex][0]["question"]["questionType"] ==
-        "card"){
-        for(var t = 0; t < totalAnswer; t++){
-          document.getElementById("more").innerHTML += "<div class='generatedBtns card' id='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"] +"' onclick='nextQuestion(this.id)'><img src='"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["img"] +"' alt=''/><div class='card-container'><h2>"+questions[currentQuestionIndex][0]["question"]["answers"][t]["optionInfo"]["title"]+"</h2><p>explain de muf asndaibfashbfsjahbsfjhs</p></div></div>";
-        }
-      } else {
+      } else if (
+        questions[currentQuestionIndex][0]["question"]["questionType"] == "card"
+      ) {
         document.getElementById("more").innerHTML +=
-          "<button class='generatedBtns' id='button_ " +
-          i +
-          "' value='" +
-          questions[counter][i] +
-          "' onclick='moreInfo(this.id)'>" +
-          questions[counter][i] +
-          "</button>";
+          "<div class='generatedBtns card' id='" +
+          questions[currentQuestionIndex][0]["question"]["answers"][i][
+            "optionInfo"
+          ]["title"] +
+          "' onclick='nextQuestion(this.id)'><img src='" +
+          questions[currentQuestionIndex][0]["question"]["answers"][i][
+            "optionInfo"
+          ]["img"] +
+          "' alt=''/><div class='card-container'><h2>" +
+          questions[currentQuestionIndex][0]["question"]["answers"][i][
+            "optionInfo"
+          ]["title"] +
+          "</p></div></div>";
+      }
+      if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
+        moreInfo();
       }
     }
   }
-  createStartButton();
 </script>
-
-
