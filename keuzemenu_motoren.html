@@ -308,22 +308,28 @@
         givenAnswers.pop();
         givenAnswers.push("buitenboordmotoren");
       }
-    } else if(number == 2) {
+    } else if (number == 2) {
       var answer = givenAnswers.slice(-1);
       answer = +answer;
-      givenAnswers.pop()
-      if (answer <= 58){
-        givenAnswers.push("fluistermotoren?prod_thrustlb_front=" + answer.toString() + "-58")
-      }else {
-        givenAnswers.push("elektrische-buitenboordmotoren?prod_thrustlb_front=" + answer.toString() + "-820")
+      givenAnswers.pop();
+      if (answer <= 58) {
+        givenAnswers.push(
+          "fluistermotoren?prod_thrustlb_front=" + answer.toString() + "-58"
+        );
+      } else {
+        givenAnswers.push(
+          "elektrische-buitenboordmotoren?prod_thrustlb_front=" +
+            answer.toString() +
+            "-820"
+        );
       }
-    } else if(number == 3){
-      if (givenAnswers[0] == "fluistermotoren"){
+    } else if (number == 3) {
+      if (givenAnswers[0] == "fluistermotoren") {
         givenAnswers.pop();
-        givenAnswers.push("7758")
+        givenAnswers.push("7758");
       } else {
         givenAnswers.pop();
-        givenAnswers.push("7687")
+        givenAnswers.push("7687");
       }
     }
   }
@@ -336,11 +342,23 @@
     questionTextHeader.innerText = "Deze sups passen het best bij jouw!";
     var baseUrl = "https://bootman.nl/";
     var selectedProductsUrl = "";
-    if (givenAnswers[0] == "elektrisch-varen"){
-      selectedProductsUrl = baseUrl + "elektrisch-varen/" + givenAnswers[1] + "&prod_watertype_front=" + givenAnswers[2] + "&price=0-" + givenAnswers[3];
+    if (givenAnswers[0] == "elektrisch-varen") {
+      selectedProductsUrl =
+        baseUrl +
+        "elektrisch-varen/" +
+        givenAnswers[1] +
+        "&prod_watertype_front=" +
+        givenAnswers[2] +
+        "&price=0-" +
+        givenAnswers[3];
       window.open(selectedProductsUrl, "_self");
     } else {
-      selectedProductsUrl = baseUrl + "boten-motoren/" + givenAnswers[0] + "?price=0-" + givenAnswers[1];
+      selectedProductsUrl =
+        baseUrl +
+        "boten-motoren/" +
+        givenAnswers[0] +
+        "?price=0-" +
+        givenAnswers[1];
       window.open(selectedProductsUrl, "_self");
     }
   }
@@ -463,12 +481,12 @@
             questions[currentQuestionIndex][0]["question"]["answers"][i][
               "optionInfo"
             ]["title"] +
-            "</h2><p></p></div></div>";
+            "</h2></div></div>";
         }
       }
     }
     if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
-      moreInfo()
+      moreInfo();
     }
   }
 
@@ -508,7 +526,7 @@
             questions[currentQuestionIndex][0]["question"]["answers"][i][
               "optionInfo"
             ]["title"] +
-            "</h2><p></p></div></div>";
+            "</h2></div></div>";
         }
       } else {
         document.getElementById("more").innerHTML +=
@@ -522,7 +540,138 @@
       }
     }
     if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
-      moreInfo()
+      moreInfo();
+    }
+  }
+  function testCreateStartButton() {
+    createStartButton();
+    const questionHeaderText = document.getElementById("questionTextHeader");
+    const answers = questions[currentQuestionIndex][0]["question"]["answers"];
+
+    const expectedTitle =
+      questions[currentQuestionIndex][0]["question"]["title"];
+
+    console.assert(
+      questionHeaderText.innerHTML === expectedTitle,
+      `Invalid title. Got: ${questionHeaderText.innerHTML}. Expected: ${expectedTitle}`
+    );
+
+    // Assert that the correct number of buttons is generated
+    const generatedAnswers = document.getElementsByClassName("generatedBtns");
+    assert(
+      generatedAnswers.length === answers.length,
+      "Incorrect number of buttons generated",
+      "correct number of buttons generated"
+    );
+
+    for (let index = 0; index < answers.length; index++) {
+      const isStandardType =
+        questions[currentQuestionIndex][0]["question"]["questionType"] ===
+        "standard";
+      const isCardType =
+        questions[currentQuestionIndex][0]["question"]["questionType"] ===
+        "card";
+      const isOtherType = !isStandardType && !isCardType;
+      const optionInfo = answers[index]["optionInfo"];
+      const button = generatedAnswers[index];
+
+      log(`Validating answer option: ${index}`, Style.base);
+
+      const expectedId = isOtherType ? `button_${index}` : optionInfo["title"];
+      const expectedOnClickValue = isOtherType
+        ? `moreInfo(this.id)`
+        : `nextQuestion(this.id)`; // TODO: fix this.id
+      const expectedValue = isOtherType
+        ? questions[0][index]
+        : isStandardType
+        ? optionInfo["title"]
+        : undefined;
+      const expectedInnerHtml = isOtherType
+        ? questions[0][index]
+        : isCardType
+        ? `<img src="${optionInfo["img"]}" alt=""><div class="card-container"><h2>${optionInfo["title"]}</h2></div>`
+        : optionInfo["title"];
+
+      assert(
+        button.id === expectedId,
+        `Button ID is not set correctly. Got: ${button.id}. Expected: ${expectedId}`,
+        `Button ID is set correctly. Got: ${button.id}. Expected: ${expectedId}`
+      );
+      assert(
+        button.innerHTML === expectedInnerHtml,
+        `Button InnerHTML is not set correctly. Got: ${button.innerHTML}. Expected: ${expectedInnerHtml}`,
+        `Button InnerHTML is set correctly. Got: ${button.innerHTML}. Expected: ${expectedInnerHtml}`
+      );
+      assert(
+        button.getAttribute("onclick") === expectedOnClickValue,
+        `Button onclick handler is not set correctly. Got: ${button.getAttribute(
+          "onclick"
+        )}. Expected: ${expectedOnClickValue}`,
+        "test passed"
+      );
+      assert(
+        button.value === expectedValue,
+        `Button value is not set correctly. Got: ${button.value}. Expected: ${expectedValue}`,
+        `Button value is set correctly. Got: ${button.value}. Expected: ${expectedValue}`
+      );
+      if (isCardType) {
+        assert(
+          button.classList.contains("card"),
+          "Card type answer does not contain `card` class",
+          "Card type answer does contain `card` class"
+        );
+      }
+    }
+  }
+  function testMoveProgressBar() {
+    const questionsLen = questions.length; // Set the number of questions for testing
+    const piece = 100 / questionsLen;
+    const expectedReducedBar = 100 - piece;
+    var elem = document.getElementById("myBar");
+
+    // Call the moveProgressBar function
+    moveProgressBar();
+
+    // Assert that the width of the element is updated correctly
+    assert(
+      elem.style.width === piece + "%",
+      `Invalid width. Got: ${elem.style.width}. Expected: ${piece}%`,
+      `succes width is ${piece} percent`
+    );
+
+    // Call the moveProgressBar function four more times
+    for (let i = 1; i < questionsLen; i++) {
+      moveProgressBar();
+    }
+
+    // Assert that the width of the element is updated correctly
+    assert(
+      elem.style.width === "100%",
+      `Invalid width. Got: ${elem.style.width}. Expected: 100%`,
+      "succes width is 100 percent"
+    );
+
+    // Assert that the width of the element is decreased correctly
+    reduceProgressBar();
+    assert(
+      elem.style.width === expectedReducedBar + "%",
+      `Invalid width. Got: ${elem.style.width}. Expected: ${expectedReducedBar}%`,
+      `succes width is ${expectedReducedBar}%`
+    );
+
+    // Assert that the width of the element is restarted correctly
+    restartProgressBar();
+    assert(
+      elem.style.width === "0%",
+      `Invalid width. Got: "${elem.style.width}". Expected: "0%"`,
+      `succes width is "0%"`
+    );
+  }
+
+  function assert(condition, onFail, onSuccess) {
+    console.assert(condition, onFail);
+    if (condition === true) {
+      log(onSuccess, Style.success);
     }
   }
 </script>
