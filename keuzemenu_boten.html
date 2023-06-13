@@ -376,7 +376,7 @@
       alert("je bent bij de eerste vraag!");
     } else {
       givenAnswers.pop();
-      currentQuestionIndex = questionPath[questionPath.length -1];
+      currentQuestionIndex = questionPath[questionPath.length - 1];
       questionPath.pop();
       reduceProgressBar();
       deleteButtons();
@@ -528,11 +528,13 @@
     testCreateStartButton();
     log("Functies m.b.t. progressbar worden getest", Style.base);
     testMoveProgressBar();
-    log("Functies m.b.t. het gaan naar de volgende en vorige vraag worden getest", Style.base);
+    log(
+      "Functies m.b.t. het gaan naar de volgende en vorige vraag worden getest",
+      Style.base
+    );
     testQuestions();
 
-
-    log("keuzehulp is gereset", Style.base)
+    log("keuzehulp is gereset", Style.base);
     restartForm();
   }
 
@@ -618,13 +620,12 @@
 
     // test delete buttons
     deleteButtons();
-    const buttons = document.getElementsByClassName("generatedBtns")
+    const buttons = document.getElementsByClassName("generatedBtns");
     assert(
-        buttons.length === 0,
-        `Button are not deleted correctly. Got: ${buttons.value}. Expected: undefined`,
-        `Button value is set correctly. Got: ${buttons.value}. Expected: undefined`
-      );
-
+      buttons.length === 0,
+      `Button are not deleted correctly. Got: ${buttons.value}. Expected: undefined`,
+      `Button value is set correctly. Got: ${buttons.value}. Expected: undefined`
+    );
   }
   function testMoveProgressBar() {
     const questionsLen = questions.length; // Set the number of questions for testing
@@ -671,26 +672,29 @@
     );
   }
 
-  function testQuestions(){
+  function testQuestions() {
     restartForm();
     nextQuestion("Rubberboot");
     previousQuestion();
+
+    // Assert that the currentQuestionIndex is back to 0
     assert(
       currentQuestionIndex === 0,
       `Invalid currentQuestionIndex is set back to zero. Got: "${currentQuestionIndex}". Expected: "0"`,
       `succes currentQuestionIndex is "0"`
     );
+    // Assert that the QuestionPath is back to empty
     assert(
       questionPath.length === 0,
       `Invalid, couldnt empty questionPath. Got: a length of ${questionPath.length}. Expected: "0"`,
       `succes array is empty"`
     );
+    // Assert that the previous given Answer has been deleted
     assert(
       givenAnswers.length === 0,
       `invalid, couldnt delete givenAnswers. Got: a length of ${givenAnswers.length}. Expected: "0"`,
       `succes array is empty"`
     );
-
   }
 
   function assert(condition, onFail, onSuccess) {
