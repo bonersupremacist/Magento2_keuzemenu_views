@@ -228,7 +228,6 @@
     var answerOption =
       questions[currentQuestionIndex][0]["question"]["answers"];
 
-    var ids = [];
     var givenAnswer = id;
     var previousQuestion = currentQuestionIndex;
     questionPath.push(currentQuestionIndex);
@@ -342,17 +341,18 @@
      * If already at the first question, displays an alert.
      * Otherwise, updates the necessary elements and progress.
      */
-    if (currentQuestionIndex == 0) {
+     if (currentQuestionIndex == 0) {
       alert("je bent bij de eerste vraag!");
     } else {
-      explanationState = false;
-      document.getElementById("explanationDiv").innerHTML = "";
       givenAnswers.pop();
-      currentQuestionIndex = questionPath.slice(-1);
+      currentQuestionIndex = questionPath[questionPath.length - 1];
       questionPath.pop();
       reduceProgressBar();
       deleteButtons();
       createButton();
+      explanationState = false;
+      document.getElementById("explanationDiv").innerHTML = "";
+    }
     }
   }
 
