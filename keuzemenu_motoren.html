@@ -214,6 +214,21 @@
   var explanationState = false;
   var currentQuestionIndex = 0;
   var questionPath = [];
+  const log = (text, extra = []) => {
+    let style = Style.base.join(";") + ";";
+    style += extra.join(";"); // Add any additional styles
+    console.log(`%c${text}`, style);
+  };
+  const Style = {
+    base: [
+      "color: #fff",
+      "background-color: #444",
+      "padding: 2px 4px",
+      "border-radius: 2px",
+    ],
+    warning: ["color: #eee", "background-color: red"],
+    success: ["background-color: green"],
+  };
   function moveProgressBar() {
     /**
      * Updates the width of a progress bar element based on the progress of the questions.
@@ -229,7 +244,7 @@
      * Restarts the progress bar by setting its width to the initial value and resetting the progress.
      */
     var elem = document.getElementById("myBar");
-    elem.style.width = 1 + "%";
+    elem.style.width = "0%";
     barProgression = 0;
   }
   function reduceProgressBar() {
@@ -409,8 +424,6 @@
       document.getElementById("explanationDiv").innerHTML +=
         questions[currentQuestionIndex][0]["question"]["explanation"];
       explanationState = true;
-      var moreInfoButton = document.getElementById("MoreInfoBtn");
-      moreInfoButton.parentNode.removeChild(id);
     }
   }
 
@@ -544,6 +557,24 @@
       moreInfo();
     }
   }
+  
+  // tests start here
+
+  function startTests() {
+    log("Functie createStartButton wordt getest", Style.base);
+    testCreateStartButton();
+    log("Functies m.b.t. progressbar worden getest", Style.base);
+    testMoveProgressBar();
+    log(
+      "Functies m.b.t. het gaan naar de volgende en vorige vraag worden getest",
+      Style.base
+    );
+    testQuestions();
+
+    log("keuzehulp is gereset", Style.base);
+    restartForm();
+  }
+
   function testCreateStartButton() {
     createStartButton();
     const questionHeaderText = document.getElementById("questionTextHeader");
@@ -623,6 +654,15 @@
         );
       }
     }
+
+    // test delete buttons
+    deleteButtons();
+    const buttons = document.getElementsByClassName("generatedBtns");
+    assert(
+      buttons.length === 0,
+      `Button are not deleted correctly. Got: ${buttons.value}. Expected: undefined`,
+      `Button value is set correctly. Got: ${buttons.value}. Expected: undefined`
+    );
   }
   function testMoveProgressBar() {
     const questionsLen = questions.length; // Set the number of questions for testing
@@ -669,10 +709,81 @@
     );
   }
 
+  function testQuestions() {
+    log("test restartform", Style.base)
+    restartForm();
+    // Assert that the currentQuestionIndex is back to 0
+    assert(
+      currentQuestionIndex === 0,
+      `Invalid currentQuestionIndex is set back to zero. Got: "${currentQuestionIndex}". Expected: "0"`,
+      `succes currentQuestionIndex is "0"`
+    );
+    // Assert that the QuestionPath is back to empty
+    assert(
+      questionPath.length === 0,
+      `Invalid, couldnt empty questionPath. Got: a length of ${questionPath.length}. Expected: "0"`,
+      `succes array is empty"`
+    );
+    // Assert that the previous given Answer has been deleted
+    assert(
+      givenAnswers.length === 0,
+      `invalid, couldnt delete givenAnswers. Got: a length of ${givenAnswers.length}. Expected: "0"`,
+      `succes array is empty"`
+    );
+    nextQuestion("Benzine motoren");
+    log("test next question", Style.base)
+    // Assert that the currentQuestionIndex is set to 1
+    assert(
+      currentQuestionIndex === 1,
+      `Invalid currentQuestionIndex isnt set back to one. Got: "${currentQuestionIndex}". Expected: "0"`,
+      `succes currentQuestionIndex is "1"`
+    );
+    // Assert that the QuestionPath is back to empty
+    assert(
+      questionPath.length === 1,
+      `Invalid, couldnt add to questionPath. Got: a length of ${questionPath.length}. Expected: "0"`,
+      `succes array is updated to 1"`
+    );
+    // Assert that the given Answer has been saved (correctly)
+    assert(
+      givenAnswers.length === 1,
+      `invalid, givenAnswers is empty or has to much. Got: a length of ${givenAnswers.length}. Expected: "0"`,
+      `succes array has one item"`
+    );
+    assert(
+      givenAnswers[0] === "buitenboordmotoren",
+      `invalid, couldnt delete givenAnswers. Got: a length of ${givenAnswers.length}. Expected: "0"`,
+      `succes array is filled with correct answer and has been correctly manipulated"`
+    );
+    previousQuestion();
+    log("test previous question", Style.base)
+    // Assert that the currentQuestionIndex is back to 0
+    assert(
+      currentQuestionIndex === 0,
+      `Invalid currentQuestionIndex is set back to zero. Got: "${currentQuestionIndex}". Expected: "0"`,
+      `succes currentQuestionIndex is "0"`
+    );
+    // Assert that the QuestionPath is back to empty
+    assert(
+      questionPath.length === 0,
+      `Invalid, couldnt empty questionPath. Got: a length of ${questionPath.length}. Expected: "0"`,
+      `succes array is empty"`
+    );
+    // Assert that the previous given Answer has been deleted
+    assert(
+      givenAnswers.length === 0,
+      `invalid, couldnt delete givenAnswers. Got: a length of ${givenAnswers.length}. Expected: "0"`,
+      `succes array is empty"`
+    );
+  }
+  
+
   function assert(condition, onFail, onSuccess) {
     console.assert(condition, onFail);
     if (condition === true) {
       log(onSuccess, Style.success);
     }
   }
+</script>
+
 </script>
