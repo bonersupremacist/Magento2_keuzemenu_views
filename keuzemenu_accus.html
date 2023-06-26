@@ -434,17 +434,17 @@
      * If already at the first question, displays an alert.
      * Otherwise, updates the necessary elements and progress.
      */
-    if (currentQuestionIndex == 0) {
+     if (currentQuestionIndex == 0) {
       alert("je bent bij de eerste vraag!");
     } else {
       givenAnswers.pop();
-      currentQuestionIndex = questionPath.slice(-1);
+      currentQuestionIndex = questionPath[questionPath.length - 1];
       questionPath.pop();
-      console.log(questionPath);
-      console.log(givenAnswers);
       reduceProgressBar();
       deleteButtons();
       createButton();
+      explanationState = false;
+      document.getElementById("explanationDiv").innerHTML = "";
     }
   }
 
