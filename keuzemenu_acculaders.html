@@ -1,0 +1,84 @@
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+
+  h1 {
+    text-align: center;
+  }
+
+  #input-container {
+    margin-bottom: 20px;
+  }
+
+  #result-container {
+    text-align: center;
+  }
+</style>
+<button id="modal-btn">keuzehulp</button>
+<div id="modal-content">
+  <h1>Acculader Advies Rekenmachine</h1>
+
+  <div id="input-container">
+    <label for="voltage">Spanning van de accu:</label>
+    <input type="number" id="voltage" placeholder="Voltage (V)" />
+  </div>
+
+  <div id="input-container">
+    <label for="capacity">Accucapaciteit:</label>
+    <input type="number" id="capacity" placeholder="Capaciteit (Ah)" />
+    <button onclick="calculateCurrent()">Bereken laadstroom</button>
+  </div>
+
+  <div id="result-container">
+    <h2>Vereiste laadstroom:</h2>
+    <p id="required-current">-</p>
+    <p id="message"></p>
+  </div>
+</div>
+<script>
+  require(["jquery", "Magento_Ui/js/modal/modal"], function ($, modal) {
+    var options = {
+      type: "popup",
+      responsive: true,
+      innerScroll: true,
+      title: "bootman keuzehulp",
+      buttons: [
+        {
+          text: $.mage.__("close"),
+          class: "modal-close",
+          click: function () {
+            this.closeModal();
+          },
+        },
+      ],
+    };
+    //modal opens when being clicked on button
+    modal(options, $("#modal-content"));
+    $("#modal-btn").on("click", function () {
+      $("#modal-content").modal("openModal");
+    });
+  });
+  function calculateCurrent() {
+    // calculates the needed current
+    var voltageInput = document.getElementById("voltage");
+    var capacityInput = document.getElementById("capacity");
+
+    var voltage = voltageInput.value;
+    var capacity = capacityInput.value;
+
+    var minimumRequiredCurrent = capacity * 0.15; // 15% from accucapacity
+    var maximumRequiredCurrent = capacity * 0.25; // 25% from accucapacity
+    var message = "Kijk bij het kopen van een acculader ook of het uw accu type ondersteunt..";
+
+    var result =
+      "U heeft een acculader nodig met een spanning van " +
+      voltage +
+      " V en een laadstroom met een waarde tussen " +
+      minimumRequiredCurrent +
+      " / " + maximumRequiredCurrent + " A.";
+    document.getElementById("required-current").textContent = result;
+    document.getElementById("message").textContent = message;
+  }
+</script>
