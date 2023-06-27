@@ -80,12 +80,14 @@
         },
       ],
     };
+    //modal opens when being clicked on button
     modal(options, $("#modal-content"));
     $("#modal-btn").on("click", function () {
       $("#modal-content").modal("openModal");
     });
   });
   function addDevice() {
+    // adds textfield if the button is clicked for new device
   var devicesList = document.getElementById("devices-list");
   
   var deviceDiv = document.createElement("div");
@@ -101,6 +103,7 @@
 
 
   function calculatePower() {
+    // calculated de needed power using the given input
   var voltageInput = document.getElementById("voltage");
   var totalPower = 0;
 
