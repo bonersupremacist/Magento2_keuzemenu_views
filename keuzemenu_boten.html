@@ -99,28 +99,27 @@
               optionInfo: {
                 title: "Rubberboot",
                 nextQuestionId: 1,
-                img: "{{media url=&quot;wysiwyg/car.jpg&quot;}}",
+                img: "{{media url=&quot;wysiwyg/rubberboot.png&quot;}}",
               },
             },
             {
               optionInfo: {
                 title: "Opblaasboot",
                 nextQuestionId: 1,
-                img: "{{media url=&quot;wysiwyg/boat.jpg&quot;}}",
+                img: "{{media url=&quot;wysiwyg/opblaasboten.png&quot;}}",
               },
             },
             {
               optionInfo: {
                 title: "Karperboot",
                 nextQuestionId: 1,
-                img: "{{media url=&quot;wysiwyg/truckk.jpg&quot;}}",
+                img: "{{media url=&quot;wysiwyg/karperboten.png&quot;}}",
               },
             },
             {
               optionInfo: {
                 title: "geen idee",
                 nextQuestionId: 2,
-                img: "",
               },
             },
           ],
@@ -450,22 +449,21 @@
       } else if (
         questions[currentQuestionIndex][0]["question"]["questionType"] == "card"
       ) {
-        for (var p = 0; p < totalAnswer; p++) {
           document.getElementById("more").innerHTML +=
             "<div class='generatedBtns card' id='" +
-            questions[currentQuestionIndex][0]["question"]["answers"][p][
+            questions[currentQuestionIndex][0]["question"]["answers"][i][
               "optionInfo"
             ]["title"] +
             "' onclick='nextQuestion(this.id)'><img src='" +
-            questions[currentQuestionIndex][0]["question"]["answers"][p][
+            questions[currentQuestionIndex][0]["question"]["answers"][i][
               "optionInfo"
             ]["img"] +
             "' alt=''/><div class='card-container'><h2>" +
-            questions[currentQuestionIndex][0]["question"]["answers"][p][
+            questions[currentQuestionIndex][0]["question"]["answers"][i][
               "optionInfo"
             ]["title"] +
             "</h2></div></div>";
-        }
+        
       }
       if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
         moreInfo();

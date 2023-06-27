@@ -481,7 +481,6 @@
       } else if (
         questions[currentQuestionIndex][0]["question"]["questionType"] == "card"
       ) {
-        for (var p = 0; p < totalAnswer; p++) {
           document.getElementById("more").innerHTML +=
             "<div class='generatedBtns card' id='" +
             questions[currentQuestionIndex][0]["question"]["answers"][i][
@@ -496,7 +495,6 @@
               "optionInfo"
             ]["title"] +
             "</h2></div></div>";
-        }
       }
     }
     if (questions[currentQuestionIndex][0]["question"]["explanation"] != "") {
