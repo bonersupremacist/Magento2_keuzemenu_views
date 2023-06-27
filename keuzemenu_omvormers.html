@@ -1,0 +1,124 @@
+<style>
+  .device-input {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 5px;
+}
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+
+  h1 {
+    text-align: center;
+  }
+
+  #input-container {
+    margin-bottom: 20px;
+  }
+
+  #devices-container {
+    margin-bottom: 20px;
+  }
+
+  #devices-list {
+    margin-bottom: 10px;
+  }
+
+  #result-container {
+    text-align: center;
+  }
+
+  input[type="number"] {
+    width: 100px;
+  }
+
+  button {
+    margin-left: 10px;
+  }
+
+  #devices-container p {
+    margin-bottom: 5px;
+  }
+</style>
+<button id="modal-btn" onclick="createStartButton()">keuzehulp</button>
+<div id="modal-content">
+  <h1>Omvormer Advies Rekenmachine</h1>
+
+  <div id="input-container">
+    <label for="voltage">Spanning van de stroombron:</label>
+    <input type="number" id="voltage" placeholder="Voltage (V)" />
+    <button onclick="calculatePower()">Bereken vermogen</button>
+  </div>
+
+  <div id="devices-container">
+    <h2>Aangesloten apparaten</h2>
+    <p>Voeg hieronder de vermogens van de apparaten toe (in watt):</p>
+    <div id="devices-list"></div>
+    <button onclick="addDevice()">Voeg apparaat toe</button>
+  </div>
+
+  <div id="result-container">
+    <h2>Vereist vermogen:</h2>
+    <p id="total-power">-</p>
+  </div>
+</div>
+<script>
+  require(["jquery", "Magento_Ui/js/modal/modal"], function ($, modal) {
+    var options = {
+      type: "popup",
+      responsive: true,
+      innerScroll: true,
+      title: "bootman keuzehulp",
+      buttons: [
+        {
+          text: $.mage.__("close"),
+          class: "modal-close",
+          click: function () {
+            this.closeModal();
+          },
+        },
+      ],
+    };
+    //modal opens when being clicked on button
+    modal(options, $("#modal-content"));
+    $("#modal-btn").on("click", function () {
+      $("#modal-content").modal("openModal");
+    });
+  });
+  function addDevice() {
+    // adds textfield if the button is clicked for new device
+  var devicesList = document.getElementById("devices-list");
+  
+  var deviceDiv = document.createElement("div");
+  deviceDiv.classList.add("device-input");
+  
+  var deviceInput = document.createElement("input");
+  deviceInput.type = "number";
+  deviceInput.placeholder = "Vermogen (W)";
+  
+  deviceDiv.appendChild(deviceInput);
+  devicesList.appendChild(deviceDiv);
+}
+
+
+  function calculatePower() {
+    // calculated de needed power using the given input
+  var voltageInput = document.getElementById("voltage");
+  var totalPower = 0;
+
+  var devices = document.getElementById("devices-list").getElementsByTagName("input");
+  for (var i = 0; i < devices.length; i++) {
+    var power = parseInt(devices[i].value);
+    if (!isNaN(power)) {
+      totalPower += power;
+    }
+  }
+
+  var inputVoltage = voltageInput.value;
+  var increasedPower = totalPower * 1.1; // Verhoogd vermogen met 10%
+  var result = "U heeft een omvormer nodig met een werkspanning van " + inputVoltage + " V en een vermogen van " + increasedPower + " W (inclusief 10% extra voor hogere aanloopstroom).";
+  document.getElementById("total-power").textContent = result;
+}
+
+</script>
