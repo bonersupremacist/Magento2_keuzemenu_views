@@ -60,6 +60,23 @@
       $("#modal-content").modal("openModal");
     });
   });
+
+  const log = (text, extra = []) => {
+    let style = Style.base.join(";") + ";";
+    style += extra.join(";"); // Add any additional styles
+    console.log(`%c${text}`, style);
+  };
+  const Style = {
+    base: [
+      "color: #fff",
+      "background-color: #444",
+      "padding: 2px 4px",
+      "border-radius: 2px",
+    ],
+    warning: ["color: #eee", "background-color: red"],
+    success: ["background-color: green"],
+  };
+
   function calculateCurrent() {
     // calculates the needed current
     var voltageInput = document.getElementById("voltage");
@@ -68,8 +85,8 @@
     var voltage = voltageInput.value;
     var capacity = capacityInput.value;
 
-    var minimumRequiredCurrent = capacity * 0.15; // 15% from accucapacity
-    var maximumRequiredCurrent = capacity * 0.25; // 25% from accucapacity
+    var minimumRequiredCurrent = capacity * 1.15; // 15% from accucapacity
+    var maximumRequiredCurrent = capacity * 1.25; // 25% from accucapacity
     var message = "Kijk bij het kopen van een acculader ook of het uw accu type ondersteunt..";
 
     var result =
@@ -77,8 +94,26 @@
       voltage +
       " V en een laadstroom met een waarde tussen " +
       minimumRequiredCurrent +
-      " / " + maximumRequiredCurrent + " A.";
+      "/" + maximumRequiredCurrent + " A.";
     document.getElementById("required-current").textContent = result;
     document.getElementById("message").textContent = message;
+  }
+
+  function testCalculateCurrent(){
+    //tests the function calculateCurrent
+    document.getElementById("voltage").innerHTML = "40";
+    document.getElementById("capacity").innerHTML = "50";
+
+    assert(
+      document.getElementById("required-current").textContent === "U heeft een acculader nodig met een spanning van 40 V en een laadstroom met een waarde tussen 57.05/62.5 A.",
+      `Invalid text result. Got: "${document.getElementById("required-current").textContent}". Expected: "U heeft een acculader nodig met een spanning van 40 V en een laadstroom met een waarde tussen 57.05/62.5 A."`,
+      `succes got correct result`
+    )
+  }
+  function assert(condition, onFail, onSuccess) {
+    console.assert(condition, onFail);
+    if (condition === true) {
+      log(onSuccess, Style.success);
+    }
   }
 </script>
